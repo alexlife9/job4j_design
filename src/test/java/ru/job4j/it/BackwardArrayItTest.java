@@ -22,10 +22,11 @@ public class BackwardArrayItTest {
     @Test
     public void whenReadSequence() {
         BackwardArrayIt it = new BackwardArrayIt(
-                new int[] {1, 2, 3}
+                new int[] {1, 6, 3, 7}
         );
+        assertThat(it.next(), is(7));
         assertThat(it.next(), is(3));
-        assertThat(it.next(), is(2));
+        assertThat(it.next(), is(6));
         assertThat(it.next(), is(1));
     }
 
