@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
  * Создать итератор возвращающий только четные цифры.
  *
  * @author Alex_life
- * @version 1.0
+ * @version 3.0
  */
 public class EvenNumbersIterator implements Iterator<Integer> {
 
@@ -32,7 +32,7 @@ public class EvenNumbersIterator implements Iterator<Integer> {
     }
     /**
      * метод hasNext() устанавливает условия, при которых возможно получение элемента контрейнера в next()
-     * @return пока итоговый массив меньше длины начального массива
+     * @return вызываем отдельный метод проверки на четность
      */
     @Override
     public boolean hasNext() {
