@@ -2,37 +2,61 @@ package ru.job4j.it;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
+/**
+ * Класс для итератора который последовательно возвращает элементы двухмерного массива
+ *
+ * В идеале метод hasnext() не должен изменять состояние объекта.
+ * Но так как у нас может быть ситуация когда в массиве есть много пустых массивов,
+ * то для оптимизации можно сделать что бы hasNext() устанавливал указатель на нужный элемент.
+ * Копировать двухмерный в одномерный массив не нужно. Это не верное решение.
+ * С помощью чисел row(первый индекс-номер строки) и column(второй индекс-номер столбца) двигаем указатель.
+ * ТИП_ДАННЫX[КОЛИЧЕСТВО_ЯЧЕЕК_РОДИТЕЛЯ][КОЛИЧЕСТВО_ЯЧЕЕК_В_ДОЧЕРНИХ_МАССИВАХ].
+ * Добавлять новые поля в класс MatrixIt не нужно.
+ * @author Alex_life
+ * @version 2.0
+ */
 public class MatrixIt implements Iterator<Integer> {
     private final int[][] data;
-    private int row = 0;
-    private int column = 0;
+    private int row = 0; //указывает на номер строки
+    private int column = 0; //column указывает на позицию элемента в строке
 
     public MatrixIt(int[][] data) {
         this.data = data;
     }
 
+    /**
+     * Результат работы методов hasNext и next не должен зависеть от последовательности
+     *  в которой программист вызывает методы, т.е. не полагайтесь на то,
+     *  что программист будет вызывать методы именно в том порядке в котором вы ожидаете.
+     *
+     * @return проверяем не пустая ли следующая строка и если она пустая увеличиваем указатель строки
+     *
+     * если column больше или равен длине строки то будет ошибка,
+     * значит надо проверить что column меньше длины строки.
+     *
+     * пока кол-во строк меньше длины всего массива И пока длина строки равна указатель строки,
+     * будем переходить на следующую строку и оставлять указатель на 0.
+     */
     @Override
     public boolean hasNext() {
-        return (row < data.length) && (column < data[row].length);
+        while (row < data.length && data[row].length == column) {
+            row++;
+            column = 0;
+        }
+        return row < data.length;
     }
 
+    /**
+     * метод next в случае отсутствия элементов к возврату генерирует NoSuchElementException.
+     * метод next должен возвращать верные значения вне зависимости от того
+     *  вызвал ли перед этим программист метод hasNext.
+     * @return должен вернуть движение указателя по строке
+     */
     @Override
     public Integer next() {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        Integer[][] mass = new Integer[row][column];
-        if (data.length != 0) {
-            for (int i = 0; i < mass.length; i++) {
-                for (int j = 0; j < mass[i].length; j++) {
-                    if (row != 0 && column != 0) {
-                        row++;
-                        column++;
-                    }
-                }
-            }
-        }
-        return data[row][column];
+        return data[row][column++];
     }
 }

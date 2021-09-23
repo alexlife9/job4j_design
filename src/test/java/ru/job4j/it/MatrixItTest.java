@@ -7,6 +7,9 @@ import org.junit.Test;
 
 import java.util.NoSuchElementException;
 
+/**
+ * Пустой массив {} это не null, это ненулевая ссылка на объект пустого массива
+ */
 public class MatrixItTest {
     @Test
     public void when4El() {
@@ -38,7 +41,8 @@ public class MatrixItTest {
     @Test
     public void whenRowHasDiffSize() {
         int[][] in = {
-                {1}, {2, 3}
+                {1},
+                {2, 3}
         };
         MatrixIt it = new MatrixIt(in);
         assertThat(it.next(), is(1));
@@ -47,9 +51,30 @@ public class MatrixItTest {
     }
 
     @Test
+    public void whenRowHasDiffSizeWithEmpty() {
+        int[][] in = {
+                {1},
+                {2, 3},
+                {},
+                {4, 7},
+                {}
+        };
+        MatrixIt it = new MatrixIt(in);
+        assertThat(it.next(), is(1));
+        assertThat(it.next(), is(2));
+        assertThat(it.next(), is(3));
+        assertThat(it.next(), is(4));
+        assertThat(it.next(), is(7));
+    }
+
+    @Test
     public void whenFewEmpty() {
         int[][] in = {
-                {1}, {}, {}, {}, {2}
+                {1},
+                {},
+                {},
+                {},
+                {2}
         };
         MatrixIt it = new MatrixIt(in);
         assertThat(it.next(), is(1));
@@ -77,7 +102,8 @@ public class MatrixItTest {
     @Test
     public void whenMultiHashNext() {
         int[][] in = {
-                {}, {1}
+                {},
+                {1}
         };
         MatrixIt it = new MatrixIt(in);
         assertThat(it.hasNext(), is(true));
