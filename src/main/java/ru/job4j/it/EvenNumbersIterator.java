@@ -17,13 +17,18 @@ public class EvenNumbersIterator implements Iterator<Integer> {
         this.data = data;
     }
 
-    public static int giveEven(int[] data, int index) {
-        for (int i = 0; i < data.length; i++) {
-            if (data[data.length - 1 - i] % 2 == 0) {
-                index += data[i];
+    /**
+     * вынес в отдельный метод поиска четных чисел
+     * @return четные или нет
+     */
+    public boolean giveEven() {
+        while (index < data.length) {
+            if (data[index] % 2 == 0) {
+                return true;
             }
+            index++;
         }
-        return index;
+        return false;
     }
     /**
      * метод hasNext() устанавливает условия, при которых возможно получение элемента контрейнера в next()
@@ -31,7 +36,7 @@ public class EvenNumbersIterator implements Iterator<Integer> {
      */
     @Override
     public boolean hasNext() {
-        return index < EvenNumbersIterator.giveEven(data, index);
+        return giveEven();
     }
 
     /**
@@ -42,7 +47,9 @@ public class EvenNumbersIterator implements Iterator<Integer> {
     public Integer next() {
         if (!hasNext()) {
             throw new NoSuchElementException();
+        } else {
+            giveEven();
         }
-        return EvenNumbersIterator.giveEven(data, index);
+        return data[index++];
     }
 }
