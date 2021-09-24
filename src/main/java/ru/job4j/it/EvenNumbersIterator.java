@@ -47,8 +47,6 @@ public class EvenNumbersIterator implements Iterator<Integer> {
     public Integer next() {
         if (!hasNext()) {
             throw new NoSuchElementException();
-        } else {
-            giveEven();
         }
         return data[index++];
     }
