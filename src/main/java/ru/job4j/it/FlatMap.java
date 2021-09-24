@@ -9,7 +9,7 @@ import java.util.Collections;
  * Класс FlatMap принимает объект вложенных итераторов.
  * @param <T>
  * @author Alex_life
- * @version 2.0
+ * @version 3.0
  */
 public class FlatMap<T> implements Iterator<T> {
     private final Iterator<Iterator<T>> data;
@@ -39,7 +39,6 @@ public class FlatMap<T> implements Iterator<T> {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        check();
         return cursor.next();
     }
 
