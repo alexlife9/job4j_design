@@ -12,13 +12,15 @@ import java.util.NoSuchElementException;
  * С помощью чисел row(первый индекс-номер строки) и column(второй индекс-номер столбца) двигаем указатель.
  * ТИП_ДАННЫX[КОЛИЧЕСТВО_ЯЧЕЕК_РОДИТЕЛЯ][КОЛИЧЕСТВО_ЯЧЕЕК_В_ДОЧЕРНИХ_МАССИВАХ].
  * Добавлять новые поля в класс MatrixIt не нужно.
+ * row - указывает на номер строки
+ * column - column указывает на позицию элемента в строке
  * @author Alex_life
  * @version 2.0
  */
 public class MatrixIt implements Iterator<Integer> {
     private final int[][] data;
-    private int row = 0; //указывает на номер строки
-    private int column = 0; //column указывает на позицию элемента в строке
+    private int row = 0;
+    private int column = 0;
 
     public MatrixIt(int[][] data) {
         this.data = data;
