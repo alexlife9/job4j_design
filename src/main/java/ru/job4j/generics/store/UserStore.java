@@ -24,14 +24,12 @@ public class UserStore implements Store<User> {
 
     @Override
     public boolean replace(String id, User model) {
-        userStore.replace(id, model);
-        return true;
+        return userStore.replace(id, model);
     }
 
     @Override
     public boolean delete(String id) {
-        userStore.delete(id);
-        return true;
+        return userStore.delete(id);
     }
 
     @Override
@@ -59,7 +57,7 @@ public class UserStore implements Store<User> {
         System.out.println("Удаляем третьего юзера. Успешно? " + userStore.delete(three.getId()));
         System.out.println("Выводим текущий список контейнеров: " + userStore);
         System.out.println("Какой юзер теперь на третьем месте? " + userStore.findById(three.getId()));
-        System.out.println("Меняем имя второго контейнера на имя четвертого юзера: " + userStore.replace("Petr", four));
+        System.out.println("Меняем имя второго контейнера на имя четвертого юзера: " + userStore.replace("Anna", four));
         System.out.println("Выводим текущий список контейнеров: " + userStore);
     }
 }
