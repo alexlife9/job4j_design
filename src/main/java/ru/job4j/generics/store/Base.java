@@ -1,7 +1,5 @@
 package ru.job4j.generics.store;
 
-import java.util.Objects;
-
 /**
  * Базовая модель объекта, который хранится в контейнере.
  * Объект класса Base - это все что угодно в хранилище со своим id.
@@ -29,10 +27,4 @@ public abstract class Base {
                 + "id='" + id + '\''
                 + '}';
     }
-
-    //
-//    @Override
-//    public String toString() {
-//        return "<" + id + ">";
-//    }
 }
