@@ -4,11 +4,20 @@ package ru.job4j.generics.store;
  * User - модель пользователя
  *
  * @author Alex_life
- * @version 1.0
- * @since 01.11.2021
+ * @version 2.0
+ * @since 02.11.2021
  */
 public class User extends Base {
     public User(String id) {
         super(id);
+    }
+
+    public String getId() {
+        return super.getId();
+    }
+
+    @Override
+    public String toString() {
+        return " UId:" + getId();
     }
 }
