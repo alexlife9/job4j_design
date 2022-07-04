@@ -59,6 +59,7 @@ public class SimpleArrayList<T> implements SimpleList<T> {
     public void add(T value) {
         modCount++;
         overSize(value);
+        container[size] = value;
         size++;
     }
 
@@ -177,6 +178,5 @@ public class SimpleArrayList<T> implements SimpleList<T> {
         if (size == container.length) {
             container = Arrays.copyOf(container, (container.length + 1) * 2);
         }
-        container[size] = value;
     }
 }
