@@ -6,8 +6,15 @@ import java.util.*;
  * Динамический список на массиве
  *
  * @author Alex_life
- * @version 1.0
- * @since 03.07.2022
+ * @version 2.0
+ * 1.Логику увеличения размера контейнера вынес в отдельный приватный метод.
+ * 2.Сделал в нем возможность увеличить массив с длиной, равной 0.
+ * 3.Валидацию индекса надо сделал в рамках добавленных элементов, вместо проводения в границах всего контейнера.
+ * 4.В методе remove() после сдвига ячеек влево обнулил последнюю ячейку контейнера.
+ * 5.Изменил условие в методе hasNext на size. Потому что счетчик modCount это счетчик структурных изменений,
+ * он может быть гораздо больше, чем количество элементов контейнера.
+ * 6. В методах set() и remove() было дублирование кода с методом get() - вызвал его в нужных местах.
+ * @since 04.07.2022
  */
 public class SimpleArrayList<T> implements SimpleList<T> {
 
@@ -45,27 +52,17 @@ public class SimpleArrayList<T> implements SimpleList<T> {
      * @param value - добавляемый элемент
      *
      * при добавлении элемента увеличиваем счетчик изменений
-     * если кол-во элементов равно текущей длине контейнера, то увеличиваем длину контейнера в 2 раза
-     * присваиваем последней (на данный момент) ячейке в контейнере новый элемент
+     * вызываем метод проверки (и увеличения в случае необходимости) длины контейнера
      * увеличиваем размер коллекции
      */
     @Override
     public void add(T value) {
         modCount++;
-        if (size == container.length) {
-            container = Arrays.copyOf(container, container.length * 2);
-        }
-        container[size] = value;
+        overSize(value);
         size++;
-
     }
 
     /**
-     * В методах, где используется индекс нужно делать валидацию.
-     * Индекс должен находиться в рамках добавленных элементов. Например, у вас есть хранилище из 10 элементов.
-     * Вы добавили 3 элемента. Каким может быть индекс? [0, 2].
-     * Для проверки индекса используйте метод Objects.checkIndex()
-     *
      * метод set замеяет элемент по указанному индексу новым элементом
      * @param index - индекс по которому надо поменять элемент
      * @param newValue - значение нового элемента
@@ -74,38 +71,39 @@ public class SimpleArrayList<T> implements SimpleList<T> {
     @Override
     public T set(int index, T newValue) {
         modCount++;
-        Objects.checkIndex(index, container.length);
-        T oldValue = container[index];
+        T log = get(index);
         container[index] = newValue;
-        return oldValue;
+        return log;
     }
 
     /**
      * Для удаления нужно использовать метод System.arraycopy()
      * Физически удалить элемент из массива мы также не можем,
      * поэтому под удалением подразумевается сдвиг части элементов правее индекса, по которому удаляем вправо.
-     * метод remove
+     * после удаления элемента обнуляем последнюю ячейку
      * @param index - индекс "удаляемого" элемента
      * @return возвращает удаленный элемент
      */
     @Override
     public T remove(int index) {
         modCount++;
-        Objects.checkIndex(index, container.length);
-        T deleteValue = container[index];
+        T log = get(index);
         System.arraycopy(container, index + 1, container, index, container.length - index - 1);
+        container[container.length - 1] = null;
         size--;
-        return deleteValue;
+        return log;
     }
 
     /**
-     * @param index
+     * Индекс должен находиться в рамках добавленных элементов. Например, у вас есть хранилище из 10 элементов.
+     * Вы добавили 3 элемента. Каким может быть индекс? [0, 2].
+     * Для проверки индекса используется метод Objects.checkIndex()
+     * @param index текущего элемента
      * @return возвращает значение элемента
      */
     @Override
     public T get(int index) {
-        modCount++;
-        Objects.checkIndex(index, container.length);
+        Objects.checkIndex(index, size);
         T value = container[index];
         return value;
     }
@@ -147,14 +145,14 @@ public class SimpleArrayList<T> implements SimpleList<T> {
 
             /**
              * метод hasNext устанавливает указатель на нужный элемент и проверяет существует ли он вообще
-             * @return возвращает true если указатель меньше счетчика(значит существует),иначе выше бросаем исключение
+             * @return возвращает true если указатель меньше размера списка(значит существует)
              */
             @Override
             public boolean hasNext() {
                 if (expectedModCount != modCount) {
                     throw new ConcurrentModificationException();
                 }
-                return point < modCount;
+                return point < size;
             }
 
             /**
@@ -169,5 +167,16 @@ public class SimpleArrayList<T> implements SimpleList<T> {
                 return container[point++];
             }
         };
+    }
+
+    /**
+     * метод overSize увеличивает размер контейнера в 2 раза, даже если массив был нулевой длины.
+     * @param value - добавляемый элемент
+     */
+    private void overSize(T value) {
+        if (size == container.length) {
+            container = Arrays.copyOf(container, (container.length + 1) * 2);
+        }
+        container[size] = value;
     }
 }
