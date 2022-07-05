@@ -10,8 +10,8 @@ import java.util.Objects;
  * Односвязанный список состоит из Nodes. Каждая Нода содержит в себе ссылку на следующий узел.
  *
  * @author Alex_life
- * @version 1.0
- * @since 04.07.2022
+ * @version 2.0
+ * @since 06.07.2022
  */
 public class SimpleLinkedList<E> implements LinkedList<E> {
 
@@ -20,14 +20,11 @@ public class SimpleLinkedList<E> implements LinkedList<E> {
          * class Node<E> - класс для описания ноды
          * currentElement - поле текущего элемента списка
          * nextNode - поле указателя на следующий элемент
-         * prevNode - поле указателя на предыдущий элемент
          * Е - тип элемента
          */
         private E currentElement;
 
         private Node<E> nextNode;
-
-        private Node<E> prevNode;
 
         /**
          * конструктор односвязной Ноды
@@ -41,14 +38,14 @@ public class SimpleLinkedList<E> implements LinkedList<E> {
     }
 
     /**
-     * nextNode - приватное поле ссылающееся на последнюю ноду
-     * prevNode - приватное поле ссылающееся на предыдущую ноду
+     * last - приватное поле ссылающееся на последнюю ноду
+     * head - приватное поле ссылающееся на предыдущую ноду
      * size - кол-во элементов в коллекции
      * modCount - счетчик кол-ва изменений коллекции
      */
-    private Node<E> nextNode;
+    private Node<E> last;
 
-    private Node<E> prevNode;
+    private Node<E> head;
 
     private int size = 0;
 
@@ -69,13 +66,13 @@ public class SimpleLinkedList<E> implements LinkedList<E> {
     @Override
     public void add(E value) {
         modCount++;
-        Node<E> actualNode = nextNode;
-        Node<E> newNode = new Node<>(value, actualNode);
-        nextNode = newNode;
+        Node<E> actualNode = last;
+        Node<E> newNode = new Node<>(value, null);
+        last = newNode;
         if (actualNode == null) {
-            prevNode = newNode;
+            head = newNode;
         } else {
-            actualNode.nextNode = nextNode;
+            actualNode.nextNode = last;
         }
         size++;
     }
@@ -92,13 +89,12 @@ public class SimpleLinkedList<E> implements LinkedList<E> {
     @Override
     public E get(int index) {
         Objects.checkIndex(index, size);
-        Node<E> actualNode = prevNode;
+        Node<E> actualNode = head;
         for (int i = 0; i < index; i++) {
             actualNode = actualNode.nextNode;
         }
         return actualNode.currentElement;
     }
-
 
     /**
      * Итератор должен реализовывать fail-fast поведение, т.е. если с момента создания итератора
@@ -108,12 +104,26 @@ public class SimpleLinkedList<E> implements LinkedList<E> {
      * В свою очередь, итератор запоминает значение этого счетчика на момент своего создания (expectedModCount),
      * а затем, на каждой итерации, сравнивает сохраненное значение с текущим значением поля modCount,
      * если они отличаются, то генерируется исключение.
-     * @return
+     * @return возвращает итератор
+     *
+     * метод hasNext проверяет существует ли следующий элемент в списке
+     * actualNode - поле для местоположения указателя на текущую ноду
+     * expectedModCount - поле для контроля изменений в коллекции во время работы итератора
+     * 1.ссылаем actualNode на первую ноду
+     * 2.ссылаем expectedModCount на счетчик изменений
+     * 3.если счетчик изменений не совпадает с контрольным счетчиком - бросаем ошибку
+     * 4.иначе возвращаем данные о том что указатель не равен null, значит нода под ним уже занята = элемент есть
+     *
+     * метод next перемещает указатель по списку
+     * 1.если следующего элемента нет. то выбрасываем исключение
+     * 2.иначе - сохраняем в локальную переменную значение текущей ноды
+     * 3.переместить указатель actualNode на следующий узел
+     * 4.возвращаем ранее сохраненное значение
      */
     @Override
     public Iterator<E> iterator() {
         return new Iterator<E>() {
-            private Node<E> actualNode;
+            private Node<E> actualNode = head;
             private int expectedModCount = modCount;
             @Override
             public boolean hasNext() {
@@ -128,7 +138,9 @@ public class SimpleLinkedList<E> implements LinkedList<E> {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                return actualNode.currentElement;
+                E saveNode = actualNode.currentElement;
+                actualNode = actualNode.nextNode;
+                return saveNode;
             }
         };
     }
