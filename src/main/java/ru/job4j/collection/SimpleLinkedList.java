@@ -18,7 +18,7 @@ public class SimpleLinkedList<E> implements LinkedList<E> {
     private static class Node<E> {
         /**
          * class Node<E> - класс для описания ноды
-         * currentElement - поле текущего элемента списка
+         * currentElement - поле хранящегося в узле значения
          * nextNode - поле указателя на следующий элемент
          * Е - тип элемента
          */
@@ -39,7 +39,7 @@ public class SimpleLinkedList<E> implements LinkedList<E> {
 
     /**
      * last - приватное поле ссылающееся на последнюю ноду
-     * head - приватное поле ссылающееся на предыдущую ноду
+     * head - приватное поле указывающее на голову списка
      * size - кол-во элементов в коллекции
      * modCount - счетчик кол-ва изменений коллекции
      */
