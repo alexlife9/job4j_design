@@ -7,7 +7,9 @@ import java.util.NoSuchElementException;
  * Удалить head в односвязном списке
  *
  * @author Alex_life
- * @version 1.0
+ * @version 2.0
+ * 1.еще не исправил метод deleteFirst
+ * 2.добавил метод addFirst
  * @since 06.07.2022
  */
 public class ForwardLinked<T> implements Iterable<T> {
@@ -15,10 +17,10 @@ public class ForwardLinked<T> implements Iterable<T> {
     /**
      * приватное поле указывающее на голову списка
      */
-    private Node<T> head;
+    Node<T> head;
 
     /**
-     * метод add добавляет ноду в список
+     * метод add добавляет ноду в конец списка
      * 1.создаем локальную переменную node и присваиваем ей ноду с нужным значением и со ссылкой null на следющую ноду
      * 2.если головная нода пустая (значит и список пустой), то присваиваем ей значение новой созданной ноды
      * 3.создаем локальную переменную tail последнего узла и присваиваем ей головной узел
@@ -40,6 +42,15 @@ public class ForwardLinked<T> implements Iterable<T> {
     }
 
     /**
+     * метод addFirst добавляет элемент в голову списка
+     * поскольку нам надо сразу в голову вставлять элемент,
+     * то просто ссылаем новую ноду на уже имеющуюся ссылку на головной узел
+     */
+    public void addFirst(T value) {
+            head = new Node<>(value, head);
+    }
+
+    /**
      * метод deleteFirst удаляет головную ноду и обнуляет ссылку на нее
      * 1.создаем локальную переменную node и присваиваем ей ссылку на головную ноду
      * 2.создаем локальную переменную tempValue и присваиваем ей значение головной ноды
@@ -53,7 +64,7 @@ public class ForwardLinked<T> implements Iterable<T> {
         if (head == null) {
             throw new NoSuchElementException();
         }
-        head = tempNode.next;
+        head = head.next;
         tempNode.next = null;
         tempNode.value = null;
         return tempValue;
@@ -114,7 +125,7 @@ public class ForwardLinked<T> implements Iterable<T> {
 
         /**
          * конструктор ноды
-         * @param value - значение элемента
+         * @param value - элемент ноды
          * @param next - ссылка на следующий узел
          */
         public Node(T value, Node<T> next) {
