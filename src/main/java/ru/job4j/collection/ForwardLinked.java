@@ -7,9 +7,9 @@ import java.util.NoSuchElementException;
  * Перевернуть связанный список
  *
  * @author Alex_life
- * @version 3.0
- * 1.исправил метод deleteFirst
- * 2.добавил метод revert для переворачивания списка
+ * @version 4.0
+ * 1.упростил метод deleteFirst
+ * 2.исправил метод revert для переворачивания списка
  * @since 07.07.2022
  */
 public class ForwardLinked<T> implements Iterable<T> {
@@ -61,7 +61,7 @@ public class ForwardLinked<T> implements Iterable<T> {
      * у текущего элемента меняем указатель чтобы он указываел не на следующий элемент, а на предыдущий
      * и потом двиггаемся по списку меняя значение всех указателей
      *
-     * @return true или false
+     * @return true если в списке больше 1 элемента и значит перестановка возможна
      */
     public boolean revert() {
         if (head != null && head.next != null) {
@@ -74,7 +74,7 @@ public class ForwardLinked<T> implements Iterable<T> {
                 current = nextTemp;
             }
         }
-        return false;
+        return head != null && head.next != null;
     }
 
     /**
@@ -89,21 +89,17 @@ public class ForwardLinked<T> implements Iterable<T> {
     /**
      * метод deleteFirst удаляет головную ноду и обнуляет ссылку на нее
      * 1.если ссылка на головную ноду null (отсутствует), то удалять нечего - выбрасываем исключение
-     * 2.создаем локальную переменную tempNode и присваиваем ей ссылку на головную ноду
-     * 3.создаем локальную переменную tempValue и присваиваем ей значение элемента головной ноды
-     * 4.
-     * @return
+     * 2.создаем локальную переменную oldValue и записываем в нее значение элемента на который ссылалась голова
+     * 3.ссылку головы меняем на следующий узел
+     * @return возвращаем сохраненное значение первого удаленного элемента списка
      */
     public T deleteFirst() {
         if (head == null) {
             throw new NoSuchElementException();
         }
-        Node<T> tempNode = head;
-        T tempValue = head.value;
+        T oldValue = head.value;
         head = head.next;
-        tempNode.next = null;
-        tempNode.value = null;
-        return tempValue;
+        return oldValue;
     }
 
     /**
