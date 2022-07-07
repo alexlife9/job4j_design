@@ -7,9 +7,8 @@ import java.util.NoSuchElementException;
  * Перевернуть связанный список
  *
  * @author Alex_life
- * @version 4.0
- * 1.упростил метод deleteFirst
- * 2.исправил метод revert для переворачивания списка
+ * @version 5.0
+ * 1.вынес условие в отдельную переменную
  * @since 07.07.2022
  */
 public class ForwardLinked<T> implements Iterable<T> {
@@ -64,7 +63,8 @@ public class ForwardLinked<T> implements Iterable<T> {
      * @return true если в списке больше 1 элемента и значит перестановка возможна
      */
     public boolean revert() {
-        if (head != null && head.next != null) {
+        boolean overOneElem = head != null && head.next != null;
+        if (overOneElem) {
             tail = head;
             Node<T> current = head.next;
             while (current != null) {
@@ -74,7 +74,7 @@ public class ForwardLinked<T> implements Iterable<T> {
                 current = nextTemp;
             }
         }
-        return head != null && head.next != null;
+        return overOneElem;
     }
 
     /**
