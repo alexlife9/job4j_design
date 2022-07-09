@@ -7,9 +7,13 @@ import java.util.NoSuchElementException;
  * Перевернуть связанный список
  *
  * @author Alex_life
- * @version 5.0
- * 1.вынес условие в отдельную переменную
- * @since 07.07.2022
+ * @version 6.0
+ * 1. в методе deleteFirst вернул обнуление значения при удалении ноды
+ * 2. поля head и tail сделал приватными
+ * 3. поэтому добавил метод isEmpty на проверку что список не пуст
+ * и чтобы до этого метода можно было постучать из другого класса
+ * 4. убрал повторяющийся код в других методах
+ * @since 10.07.2022
  */
 public class ForwardLinked<T> implements Iterable<T> {
 
@@ -17,8 +21,12 @@ public class ForwardLinked<T> implements Iterable<T> {
      * head - ссылка на голову списка (на первый элемент)
      * tail - ссылка на хвост списка (на последний элемент)
      */
-    Node<T> head;
-    Node<T> tail;
+    private Node<T> head;
+    private Node<T> tail;
+
+    public boolean isEmpty() {
+        return head == null;
+    }
 
     /**
      * метод add добавляет ноду в конец списка
@@ -31,7 +39,7 @@ public class ForwardLinked<T> implements Iterable<T> {
      */
     public void add(T value) {
         Node<T> node = new Node<>(value, null);
-        if (head == null) {
+        if (isEmpty()) {
             head = node;
             return;
         }
@@ -63,7 +71,7 @@ public class ForwardLinked<T> implements Iterable<T> {
      * @return true если в списке больше 1 элемента и значит перестановка возможна
      */
     public boolean revert() {
-        boolean overOneElem = head != null && head.next != null;
+        boolean overOneElem = !isEmpty() && head.next != null;
         if (overOneElem) {
             tail = head;
             Node<T> current = head.next;
@@ -89,16 +97,22 @@ public class ForwardLinked<T> implements Iterable<T> {
     /**
      * метод deleteFirst удаляет головную ноду и обнуляет ссылку на нее
      * 1.если ссылка на головную ноду null (отсутствует), то удалять нечего - выбрасываем исключение
-     * 2.создаем локальную переменную oldValue и записываем в нее значение элемента на который ссылалась голова
-     * 3.ссылку головы меняем на следующий узел
+     * 2.создаем локальную переменную tempNode и записываем в нее ссылку на голову
+     * 3.создаем локальную переменную oldValue и записываем в нее значение элемента головы
+     * 3.ссылку на голову меняем на ссылку на следующий узел
+     * 4.обнуляем сохраненное значение ссылки на голову
+     * 5.обнуляем сохраненное значение элемента головы
      * @return возвращаем сохраненное значение первого удаленного элемента списка
      */
     public T deleteFirst() {
-        if (head == null) {
+        if (isEmpty()) {
             throw new NoSuchElementException();
         }
+        Node<T> tempNode = head;
         T oldValue = head.value;
         head = head.next;
+        tempNode.next = null;
+        tempNode.value = null;
         return oldValue;
     }
 
@@ -120,7 +134,7 @@ public class ForwardLinked<T> implements Iterable<T> {
              */
             @Override
             public boolean hasNext() {
-                return node != null;
+                return !isEmpty();
             }
 
             /**

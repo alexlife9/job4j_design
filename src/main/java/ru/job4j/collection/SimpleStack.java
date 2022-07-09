@@ -4,8 +4,9 @@ package ru.job4j.collection;
  * Используя контейнер на базе связанного списка создать контейнер Stack
  *
  * @author Alex_life
- * @version 1.0
- * @since 06.07.2022
+ * @version 2.0
+ * 1. добавил метод isEmpty
+ * @since 10.07.2022
  */
 public class SimpleStack<T> {
     private ForwardLinked<T> linked = new ForwardLinked<>();
@@ -31,6 +32,6 @@ public class SimpleStack<T> {
      * @return true если в голове коллекции null
      */
     public boolean isEmpty() {
-        return linked.head == null;
+        return linked.isEmpty();
     }
 }
