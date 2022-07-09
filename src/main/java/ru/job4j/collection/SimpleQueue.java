@@ -7,8 +7,8 @@ import java.util.NoSuchElementException;
  * Термин FIFO - first input first output. Первый пришел, первый ушел.
  *
  * @author Alex_life
- * @version 2.0
- * 1.добавил выброс исключения если входящий стек пустой
+ * @version 3.0
+ * 1.добавил проверку что на пустоту исходящего стека
  * @since 10.07.2022
  */
 public class SimpleQueue<T> {
@@ -21,17 +21,19 @@ public class SimpleQueue<T> {
 
     /**
      * Метод pollFirst() возвращает ПЕРВОЕ значение и удаляет его из коллекции.
-     * 1.если входящий стек пустой, то выбрасываем исключение
-     * 2. пока входящий стек не пустой - во второй стек добавляем значение элемента из первого
-     * и сразу удаляем его из первого стека
+     * 1.если оба стека пустые, то выбрасываем исключение
+     * 2.если выходящий стек пустой, то  пока входящий стек не пустой -
+     * во второй стек добавляем значение элемента из первого и сразу удаляем его из первого стека
      * @return возвращаем первый элемент во втором стеке
      */
     public T pollFirst() {
-        if (in.isEmpty()) {
+        if (in.isEmpty() && out.isEmpty()) {
             throw new NoSuchElementException();
         }
-        while (!in.isEmpty()) {
-            out.push(in.pop());
+        if (out.isEmpty()) {
+            while (!in.isEmpty()) {
+                out.push(in.pop());
+            }
         }
         return out.pop();
     }
