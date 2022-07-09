@@ -25,4 +25,12 @@ public class SimpleStack<T> {
     public void push(T value) {
         linked.addFirst(value);
     }
+
+    /**
+     * метод проверяет пустая ли у нас коллекция
+     * @return true если в голове коллекции null
+     */
+    public boolean isEmpty() {
+        return linked.head == null;
+    }
 }
