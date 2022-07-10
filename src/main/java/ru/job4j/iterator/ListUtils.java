@@ -12,13 +12,16 @@ import java.util.function.Predicate;
  * но только с помощью самого итератора.
  *
  * @author Alex_life
- * @version 1.0
- * @since 10.07.2022
+ * @version 2.0
+ * 1.упростил методы replaceIf, addBefore и addAfter
+ * @since 11.07.2022
  */
 public class ListUtils {
 
     /**
      * метод addBefore вставляет элемент перед индексом
+     * 1.вызываем метод listIterator с заданным индексом и у этого метода вызываем метод add с заданным значением
+     * для вставки на заданный индекс необходимого элемента
      * @param list - коллекция
      * @param index - индекс элемента
      * @param value - элемент
@@ -26,18 +29,13 @@ public class ListUtils {
      */
     public static <T> void addBefore(List<T> list, int index, T value) {
         Objects.checkIndex(index, list.size());
-        ListIterator<T> iterator = list.listIterator();
-        while (iterator.hasNext()) {
-            if (iterator.nextIndex() == index) {
-                iterator.add(value);
-                break;
-            }
-            iterator.next();
-        }
+        list.listIterator(index).add(value);
     }
 
     /**
      * метод addAfter вставляет элемент после индекса
+     * 1.вызываем метод listIterator с заданным индексом (+1 для вставки на следующий) и
+     * у этого метода вызываем метод add с заданным значением для вставки на необходимый индекс необходимого элемента
      * @param list - коллекция
      * @param index - индекс элемента
      * @param value - элемент
@@ -45,15 +43,7 @@ public class ListUtils {
      */
     public static <T> void addAfter(List<T> list, int index, T value) {
         Objects.checkIndex(index, list.size());
-        ListIterator<T> iterator = list.listIterator();
-        while (iterator.hasNext()) {
-            iterator.next();
-            if (iterator.previousIndex() == index) {
-                iterator.add(value);
-                break;
-            }
-            iterator.next();
-        }
+        list.listIterator(index + 1).add(value);
     }
 
     /**
@@ -91,8 +81,7 @@ public class ListUtils {
         ListIterator<T> elem = list.listIterator();
         while (elem.hasNext()) {
             if (filter.test(elem.next())) {
-                elem.remove();
-                elem.add(value);
+                elem.set(value);
             }
         }
     }
