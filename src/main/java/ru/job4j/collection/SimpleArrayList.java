@@ -6,15 +6,9 @@ import java.util.*;
  * Динамический список на массиве
  *
  * @author Alex_life
- * @version 2.0
- * 1.Логику увеличения размера контейнера вынес в отдельный приватный метод.
- * 2.Сделал в нем возможность увеличить массив с длиной, равной 0.
- * 3.Валидацию индекса надо сделал в рамках добавленных элементов, вместо проводения в границах всего контейнера.
- * 4.В методе remove() после сдвига ячеек влево обнулил последнюю ячейку контейнера.
- * 5.Изменил условие в методе hasNext на size. Потому что счетчик modCount это счетчик структурных изменений,
- * он может быть гораздо больше, чем количество элементов контейнера.
- * 6. В методах set() и remove() было дублирование кода с методом get() - вызвал его в нужных местах.
- * @since 04.07.2022
+ * @version 3.0
+ * мелкие правки
+ * @since 11.07.2022
  */
 public class SimpleArrayList<T> implements SimpleList<T> {
 
@@ -58,7 +52,7 @@ public class SimpleArrayList<T> implements SimpleList<T> {
     @Override
     public void add(T value) {
         modCount++;
-        overSize(value);
+        overSize();
         container[size] = value;
         size++;
     }
@@ -105,8 +99,7 @@ public class SimpleArrayList<T> implements SimpleList<T> {
     @Override
     public T get(int index) {
         Objects.checkIndex(index, size);
-        T value = container[index];
-        return value;
+        return container[index];
     }
 
     /**
@@ -172,9 +165,8 @@ public class SimpleArrayList<T> implements SimpleList<T> {
 
     /**
      * метод overSize увеличивает размер контейнера в 2 раза, даже если массив был нулевой длины.
-     * @param value - добавляемый элемент
      */
-    private void overSize(T value) {
+    private void overSize() {
         if (size == container.length) {
             container = Arrays.copyOf(container, (container.length + 1) * 2);
         }
