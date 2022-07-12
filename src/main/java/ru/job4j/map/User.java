@@ -15,8 +15,14 @@ import java.util.*;
  * Поскольку сравнивали хешкоды, то иквалз сравнивается реализацией по-умолчанию, при которой
  * разные объекты (даже с одинаковыми значениями) конечно же не равны, потому что ссылаются на разные участки памяти
  *
+ * 3. Если переопределить только equals без hashCode, то сначала сравниваются объекты с помощью метода хешкод, который
+ * зашит по-умолчанию в Collections.Framework. Согласно этой реализаци разные объекты не равны,
+ * даже если их содержимое полностью идентично, соответственно и хешкоды объектов будут при вычислении разные.
+ * Поскольку equals переопределен, то объекты будут равны, потому что их содержимое сравнивается уже напрямую исходя из
+ * их содержимого, а не просто как сравнение двух ссылок на объекты. Вступает в силу реализация метода от класса Objects.
+ *
  * @author Alex_life
- * @version 2.0
+ * @version 3.0
  * @since 12.07.2022
  */
 public class User {
@@ -48,7 +54,10 @@ public class User {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(name, children, birthday);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return children == user.children && Objects.equals(name, user.name) && Objects.equals(birthday, user.birthday);
     }
 }
