@@ -21,8 +21,11 @@ import java.util.*;
  * Поскольку equals переопределен, то объекты будут равны, потому что их содержимое сравнивается уже напрямую исходя из
  * их содержимого, а не просто как сравнение двух ссылок на объекты. Вступает в силу реализация метода от класса Objects.
  *
+ * 4. Если переопределить equals и hashCode, то видим что хэшкоды объектов равны и содержимое объектов тоже равно.
+ * Значит в нашей хешмапе останется только один объект в одном бакете с заданными уникальными значениями.
+ *
  * @author Alex_life
- * @version 3.0
+ * @version 4.0
  * @since 12.07.2022
  */
 public class User {
@@ -55,9 +58,18 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         User user = (User) o;
         return children == user.children && Objects.equals(name, user.name) && Objects.equals(birthday, user.birthday);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, children, birthday);
     }
 }
