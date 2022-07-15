@@ -24,8 +24,14 @@ import java.util.*;
  * 4. Если переопределить equals и hashCode, то видим что хэшкоды объектов равны и содержимое объектов тоже равно.
  * Значит в нашей хешмапе останется только один объект в одном бакете с заданными уникальными значениями.
  *
+ * Правила когда переопределены equals и hashCode:
+ Если объекты равны по hashCode(), то они не обязательно равны по equals()
+ Если объекты равны по equals(), то они обязательно равны по hashCode()
+ Если объект не равны по hashCode(), то они точно не равны по equals()
+ Если объекты не равны по equals(), то возможно совпадение их hashCode()
+ *
  * @author Alex_life
- * @version 4.0
+ * @version 5.0
  * @since 12.07.2022
  */
 public class User {
@@ -39,7 +45,7 @@ public class User {
         this.birthday = birthday;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException {
         User user1 = new User("Alex", 21,
                 new GregorianCalendar(1982, 2, 21, 5, 50, 30));
         User user2 = new User("Alex", 21,
@@ -51,9 +57,19 @@ public class User {
         for (Map.Entry<User, Object> entry : map.entrySet()) {
             System.out.println(entry.getKey() + ":" + entry.getValue());
         }
-        System.out.println(user1.hashCode());
-        System.out.println(user2.hashCode());
+        System.out.println("хешкод юзер 1 - " + user1.hashCode());
+        System.out.println("хешкод юзер 2 - " + user2.hashCode());
         System.out.println(user1.equals(user2));
+
+        int hash1 = (user1.hashCode() ^ (user1.hashCode() >>> 16));
+        int hash2 = (user2.hashCode() ^ (user2.hashCode() >>> 16));
+        System.out.println("функция хеша юзер 1 - " + hash1);
+        System.out.println("функция хеша юзер 2 - " + hash2);
+
+        int backet1 = hash1 & (16 - 1);
+        System.out.println("номер бакета юзера 1 - " + backet1);
+        int backet2 = hash2 & (16 - 1);
+        System.out.println("номер бакета юзера 2 - " + backet2);
     }
 
     @Override
