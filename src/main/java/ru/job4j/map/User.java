@@ -34,8 +34,8 @@ import java.util.*;
  * Это позволит избежать проблем с изменением хэшкодов у объектов, если попытаться изменить объект
  *
  * @author Alex_life
- * @version 5.0
- * @since 12.07.2022
+ * @version 6.0
+ * @since 15.07.2022
  */
 public final class User {
     private final String name;
@@ -50,14 +50,14 @@ public final class User {
 
     public static void main(String[] args) {
         User user1 = new User("Alex", 21,
-                new GregorianCalendar(1982, 2, 21, 5, 50, 30));
+                new GregorianCalendar(1982, 12, 21, 5, 50, 20));
         User user2 = new User("Alex", 21,
-                new GregorianCalendar(1982, 2, 21, 5, 50, 30));
-        Map<User, Object> map = new HashMap<>();
+                new GregorianCalendar(1982, 12, 21, 5, 50, 20));
+        HashMap<User, Object> map = new HashMap<>();
         map.put(user1, new Object());
         map.put(user2, new Object());
 
-        for (Map.Entry<User, Object> entry : map.entrySet()) {
+        for (HashMap.Entry<User, Object> entry : map.entrySet()) {
             System.out.println("ключ объекта: " + entry.getKey());
             System.out.println("и его значение: " + entry.getValue());
         }
@@ -100,10 +100,10 @@ public final class User {
      * метод hash вычисляет хэш ключа бакета
      * @return возвращаем хэш ключа
      */
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(name, children, birthday);
-//    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, children, birthday);
+    }
 
     @Override
     public String toString() {
