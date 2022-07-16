@@ -8,8 +8,8 @@ import java.util.NoSuchElementException;
  * Реализация собственной структуры данных - HashMap
  *
  * @author Alex_life
- * @version 1.0
- * @since 16.07.2022
+ * @version 2.0
+ * @since 17.07.2022
  */
 public class SimpleMap<K, V> implements Map<K, V> {
 
@@ -34,7 +34,7 @@ public class SimpleMap<K, V> implements Map<K, V> {
      * хеш-таблица table, реализованная на основе массива, для хранения пар «ключ-значение» в виде узлов.
      * Здесь хранятся наши Node
      */
-    private MapEntry<K, V>[] table = new MapEntry[capacity];
+    private final MapEntry<K, V>[] table = new MapEntry[capacity];
 
     /**
      * метод put вставляет новые элементы в хеш-таблицу. В случае отсутствия места возвращает false.
@@ -59,12 +59,11 @@ public class SimpleMap<K, V> implements Map<K, V> {
 
     /**
      * метод hash вычисляет хэш ключа бакета
-     * @param hashCode на вход подаем хэшкод
+     * @param hashCode на вход подаем хэшкод уже вычисленный внутренней реализацией
      * @return хэш
      */
     private int hash(int hashCode) {
-        int hash = hashCode() ^ hashCode() >>> 16;
-        return hash;
+        return hashCode ^ hashCode >>> 16;
     }
 
     /**
@@ -74,14 +73,6 @@ public class SimpleMap<K, V> implements Map<K, V> {
      */
     private int indexFor(int hash) {
         return hash & (capacity - 1);
-    }
-
-    public int size() {
-        return size;
-    }
-
-    public boolean isEmpty() {
-        return size == 0;
     }
 
     /**
@@ -130,22 +121,38 @@ public class SimpleMap<K, V> implements Map<K, V> {
     @Override
     public Iterator<K> iterator() {
         return new Iterator<K>() {
-            private int point = 0;
+            /**
+             * cursor - указатель итератора
+             * expectedModCount - сохраняем значение счетчика изменений на момент запуска итератора
+             * если счетчики не равны (значит наша хэштаблица изменена), то выбрасываем исключение
+             * Это называется fail-fast поведением
+             *
+             * увеличиваем счетчик указателя по бакетам, пока они равны null И пока есть след-й элемент
+             * возвращаем true если счетчик указателя меньше кол-ва непустых бакетов, значит след-й элемент есть
+             */
+            private int cursor = 0;
             private final int expectedModCount = modCount;
             @Override
             public boolean hasNext() {
                 if (expectedModCount != modCount) {
                     throw new ConcurrentModificationException();
                 }
-                return point < size;
+                while (table[cursor] == null && cursor < size) {
+                    cursor++;
+                }
+                return cursor < size;
             }
 
+            /**
+             * метод next возвращает ключ элемента, если бакет под указателем не пустой
+             * @return возвращает ключ найденного под курсором элемента и сдвигает курсор на следующую ячейку
+             */
             @Override
             public K next() {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                return table[point++].key;
+                return table[cursor++].key;
             }
         };
     }
