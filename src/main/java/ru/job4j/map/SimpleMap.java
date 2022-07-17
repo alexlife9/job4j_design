@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
  * Реализация собственной структуры данных - HashMap
  *
  * @author Alex_life
- * @version 2.0
+ * @version 3.0
  * @since 17.07.2022
  */
 public class SimpleMap<K, V> implements Map<K, V> {
@@ -26,15 +26,13 @@ public class SimpleMap<K, V> implements Map<K, V> {
 
     private int size = 0;
 
-    private int threshold = (int) (capacity * LOAD_FACTOR);
-
     private int modCount = 0;
 
     /**
      * хеш-таблица table, реализованная на основе массива, для хранения пар «ключ-значение» в виде узлов.
      * Здесь хранятся наши Node
      */
-    private final MapEntry<K, V>[] table = new MapEntry[capacity];
+    private MapEntry<K, V>[] table = new MapEntry[capacity];
 
     /**
      * метод put вставляет новые элементы в хеш-таблицу. В случае отсутствия места возвращает false.
@@ -46,15 +44,12 @@ public class SimpleMap<K, V> implements Map<K, V> {
     @Override
     public boolean put(K key, V value) {
         expand();
-        boolean rsl = false;
-        int i = indexFor(hash(key.hashCode()));
-        if (table[i] == null) {
-            table[i] = new MapEntry<>(key, value);
+        if (table[iB(key)] == null) {
+            table[iB(key)] = new MapEntry<>(key, value);
             size++;
             modCount++;
-            rsl = true;
         }
-        return rsl;
+        return false;
     }
 
     /**
@@ -76,12 +71,28 @@ public class SimpleMap<K, V> implements Map<K, V> {
     }
 
     /**
+     * индекс бакета с искомым ключом
+     * @param key ключ
+     * @return индекс
+     */
+    public int iB(K key) {
+        return indexFor(hash(key.hashCode()));
+    }
+
+    /**
      * метод expand увеличивает capacity вдвое
      * если кол-во объектов больше или равно предельному значению капасити, то увеличиваем емкость вдвое
      */
     private void expand() {
-        if (size >= threshold) {
+        if ((float) size / table.length > LOAD_FACTOR) {
             capacity = capacity * 2;
+            MapEntry<K, V>[] tableNew = new MapEntry[capacity];
+            for (MapEntry<K, V> kvMapEntry : table) {
+                if (kvMapEntry != null) {
+                    tableNew[indexFor(hash(kvMapEntry.key.hashCode()))] = kvMapEntry;
+                }
+            }
+            table = tableNew;
         }
     }
 
@@ -92,11 +103,10 @@ public class SimpleMap<K, V> implements Map<K, V> {
      */
     @Override
     public V get(K key) {
-        int i = indexFor(hash(key.hashCode()));
-        if (key == null) {
-            return null;
+        if (table[iB(key)] != null && table[iB(key)].key.equals(key)) {
+            return table[iB(key)].value;
         }
-        return table[i].value;
+        return null;
     }
 
     /**
@@ -106,16 +116,13 @@ public class SimpleMap<K, V> implements Map<K, V> {
      */
     @Override
     public boolean remove(K key) {
-        boolean rsl = false;
-        int i = indexFor(hash(key.hashCode()));
-        if (key == null) {
-            return false;
-        } else {
-            table[i] = null;
+        if (table[iB(key)] != null && table[iB(key)].key.equals(key)) {
+            table[iB(key)] = null;
             size--;
             modCount++;
+            return true;
         }
-        return rsl;
+        return false;
     }
 
     @Override
@@ -134,13 +141,13 @@ public class SimpleMap<K, V> implements Map<K, V> {
             private final int expectedModCount = modCount;
             @Override
             public boolean hasNext() {
-                if (expectedModCount != modCount) {
+                if (modCount != expectedModCount) {
                     throw new ConcurrentModificationException();
                 }
-                while (table[cursor] == null && cursor < size) {
+                while (table.length != cursor && table[cursor] == null) {
                     cursor++;
                 }
-                return cursor < size;
+                return cursor < table.length;
             }
 
             /**
