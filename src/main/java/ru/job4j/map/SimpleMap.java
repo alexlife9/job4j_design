@@ -8,8 +8,8 @@ import java.util.NoSuchElementException;
  * Реализация собственной структуры данных - HashMap
  *
  * @author Alex_life
- * @version 4.0
- * @since 18.07.2022
+ * @version 5.0
+ * @since 19.07.2022
  */
 public class SimpleMap<K, V> implements Map<K, V> {
 
@@ -48,13 +48,20 @@ public class SimpleMap<K, V> implements Map<K, V> {
     @Override
     public boolean put(K key, V value) {
         expand();
-        if (table[iB(key)] == null) {
-            table[iB(key)] = new MapEntry<>(key, value);
-            size++;
-            modCount++;
-            return true;
+        boolean rsl;
+        int i = 0;
+        if (key != null) {
+            i = iB(key);
         }
-        return false;
+        if (table[i] == null) {
+            table[i] = new MapEntry<>(key, value);
+            rsl = true;
+        } else {
+            rsl = false;
+        }
+        size++;
+        modCount++;
+        return rsl;
     }
 
     /**
@@ -77,15 +84,11 @@ public class SimpleMap<K, V> implements Map<K, V> {
 
     /**
      * индекс бакета с искомым ключом
-     * проверяем ключ на null (потому что нельзя использовать в качестве ключа null в хэш-таблицах)
      * @param key ключ
      * @return вычесленный индекс для бакета либо просто последний индекс таблицы (если ключ равен null)
      */
     public int iB(K key) {
-        if (key != null) {
-            return indexFor(hash(key.hashCode()));
-        }
-        return capacity - 1;
+        return indexFor(hash(key.hashCode()));
     }
 
     /**
@@ -105,6 +108,7 @@ public class SimpleMap<K, V> implements Map<K, V> {
                     tableNew[indexFor(hash(kvMapEntry.key.hashCode()))] = kvMapEntry;
                 }
             }
+            modCount++;
             table = tableNew;
         }
     }
@@ -119,10 +123,15 @@ public class SimpleMap<K, V> implements Map<K, V> {
      */
     @Override
     public V get(K key) {
-        if (table[iB(key)] != null && table[iB(key)].key.equals(key)) {
-            return table[iB(key)].value;
+        V rsl = null;
+        int i = 0;
+        if (key != null) {
+            i = iB(key);
         }
-        return null;
+        if (table[i] != null && table[i].key.equals(key)) {
+            rsl = table[i].value;
+        }
+        return rsl;
     }
 
     /**
@@ -135,13 +144,18 @@ public class SimpleMap<K, V> implements Map<K, V> {
      */
     @Override
     public boolean remove(K key) {
-        if (table[iB(key)] != null && table[iB(key)].key.equals(key)) {
-            table[iB(key)] = null;
+        boolean rsl = false;
+        int i = 0;
+        if (key != null) {
+            i = iB(key);
+        }
+        if (table[i] != null && table[i].key.equals(key)) {
+            table[i] = null;
             size--;
             modCount++;
-            return true;
+            return rsl;
         }
-        return false;
+        return rsl;
     }
 
     @Override
