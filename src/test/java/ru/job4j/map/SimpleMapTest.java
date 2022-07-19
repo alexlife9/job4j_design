@@ -9,8 +9,8 @@ import static org.assertj.core.api.Assertions.*;
  * Реализация собственной структуры данных - HashMap
  *
  * @author Alex_life
- * @version 1.0
- * @since 16.07.2022
+ * @version 2.0
+ * @since 19.07.2022
  */
 class SimpleMapTest {
 
@@ -33,6 +33,12 @@ class SimpleMapTest {
     }
 
     @Test
+    void whenCheckMyGet() {
+        assertThat(map.get(3)).isEqualTo("3");
+        assertThat(map.get(0)).isNull();
+    }
+
+    @Test
     void whenCheckPut() {
         assertThat(map.put(0, "0")).isTrue();
         assertThat(map).hasSize(5);
@@ -44,6 +50,38 @@ class SimpleMapTest {
     }
 
     @Test
+    void whenCheckMyPut() {
+        assertThat(map.put(5, "5")).isTrue();
+        assertThat(map.put(null, "null")).isTrue();
+        assertThat(map).hasSize(6);
+    }
+
+    @Test
+    void whenCheckMyPutAddOther() {
+        assertThat(map.put(5, "5")).isTrue();
+        assertThat(map.put(null, "null")).isTrue();
+        assertThat(map).hasSize(6);
+        assertThat(map.put(6, "6")).isTrue();
+        assertThat(map).hasSize(7);
+    }
+
+    @Test
+    void whenCheckMyPutTwoSame() {
+        assertThat(map.put(5, "5")).isTrue();
+        assertThat(map.put(5, "5")).isFalse();
+        assertThat(map.put(null, "null")).isTrue();
+        assertThat(map).hasSize(6);
+    }
+
+    @Test
+    void whenCheckMyPutTwoNull() {
+        assertThat(map.put(5, "5")).isTrue();
+        assertThat(map.put(null, "null")).isTrue();
+        assertThat(map.put(null, "null")).isFalse();
+        assertThat(map).hasSize(6);
+    }
+
+    @Test
     void whenCheckRemove() {
         assertThat(map.remove(2)).isTrue();
         assertThat(map).hasSize(3);
@@ -51,6 +89,20 @@ class SimpleMapTest {
         assertThat(map).hasSize(3);
         assertThat(map.remove(5)).isFalse();
         assertThat(map).hasSize(3);
+    }
+
+    @Test
+    void whenCheckMyRemove() {
+        assertThat(map.remove(1)).isTrue();
+        assertThat(map).hasSize(3);
+        assertThat(map.put(1, "10")).isTrue();
+        assertThat(map.get(1)).isEqualTo("10");
+        assertThat(map).hasSize(4);
+    }
+
+    @Test
+    void whenCheckIb() {
+        assertThat(map.iB(1)).isEqualTo(1);
     }
 
     @Test
@@ -103,6 +155,20 @@ class SimpleMapTest {
         for (Integer integer : map) {
             listKey.add(integer);
         }
-        assertThat(listKey).hasSize(7).contains(0, 1, 2, 3, 4, 8, 15);
+        assertThat(listKey).hasSize(7).contains(0, 1, 2, 3, 4, 8, 16);
+    }
+
+    @Test
+    void whenMapMyExpand() {
+        List<Integer> listKey = new ArrayList<>();
+        map.put(0, "0");
+        assertThat(map.put(5, "5")).isTrue();
+        assertThat(map).hasSize(6);
+        assertThat(map.put(6, "6")).isTrue();
+        assertThat(map).hasSize(7);
+        for (Integer integer : map) {
+            listKey.add(integer);
+        }
+        assertThat(listKey).hasSize(6).contains(0, 1, 2, 3, 4, 5, 6);
     }
 }

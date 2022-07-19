@@ -3,12 +3,13 @@ package ru.job4j.map;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * Реализация собственной структуры данных - HashMap
  *
  * @author Alex_life
- * @version 5.0
+ * @version 6.0
  * @since 19.07.2022
  */
 public class SimpleMap<K, V> implements Map<K, V> {
@@ -85,7 +86,7 @@ public class SimpleMap<K, V> implements Map<K, V> {
     /**
      * индекс бакета с искомым ключом
      * @param key ключ
-     * @return вычесленный индекс для бакета либо просто последний индекс таблицы (если ключ равен null)
+     * @return вычесленный индекс для бакета
      */
     public int iB(K key) {
         return indexFor(hash(key.hashCode()));
@@ -100,12 +101,12 @@ public class SimpleMap<K, V> implements Map<K, V> {
      * 4.после того как прошли все элементы сохраняем новую таблицу под старым именем table
      */
     private void expand() {
-        if ((float) size / table.length > LOAD_FACTOR) {
+        if (size / capacity >= (int) LOAD_FACTOR) {
             capacity = capacity * 2;
             MapEntry<K, V>[] tableNew = new MapEntry[capacity];
-            for (MapEntry<K, V> kvMapEntry : table) {
-                if (kvMapEntry != null) {
-                    tableNew[indexFor(hash(kvMapEntry.key.hashCode()))] = kvMapEntry;
+            for (int i = 0; i < table.length; i++) {
+                if (!Objects.isNull(i) && table[i] != null) {
+                    tableNew[indexFor(hash(table[i].key.hashCode()))] = table[i];
                 }
             }
             modCount++;
@@ -128,7 +129,7 @@ public class SimpleMap<K, V> implements Map<K, V> {
         if (key != null) {
             i = iB(key);
         }
-        if (table[i] != null && table[i].key.equals(key)) {
+        if (table[i] != null && table[i].key.hashCode() == key.hashCode() && Objects.equals(table[i].key, key)) {
             rsl = table[i].value;
         }
         return rsl;
@@ -149,11 +150,11 @@ public class SimpleMap<K, V> implements Map<K, V> {
         if (key != null) {
             i = iB(key);
         }
-        if (table[i] != null && table[i].key.equals(key)) {
+        if (table[i] != null && table[i].key.hashCode() == key.hashCode() && Objects.equals(table[i].key, key)) {
             table[i] = null;
             size--;
             modCount++;
-            return rsl;
+            rsl = true;
         }
         return rsl;
     }
@@ -180,7 +181,7 @@ public class SimpleMap<K, V> implements Map<K, V> {
                 while (table.length != cursor && table[cursor] == null) {
                     cursor++;
                 }
-                return cursor < capacity - 1;
+                return cursor < table.length - 1;
             }
 
             /**
