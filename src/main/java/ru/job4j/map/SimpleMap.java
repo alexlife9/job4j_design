@@ -1,16 +1,13 @@
 package ru.job4j.map;
 
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Реализация собственной структуры данных - HashMap
  *
  * @author Alex_life
- * @version 6.0
- * @since 19.07.2022
+ * @version 7.0
+ * @since 20.07.2022
  */
 public class SimpleMap<K, V> implements Map<K, V> {
 
@@ -57,11 +54,11 @@ public class SimpleMap<K, V> implements Map<K, V> {
         if (table[i] == null) {
             table[i] = new MapEntry<>(key, value);
             rsl = true;
+            size++;
+            modCount++;
         } else {
             rsl = false;
         }
-        size++;
-        modCount++;
         return rsl;
     }
 
@@ -101,12 +98,12 @@ public class SimpleMap<K, V> implements Map<K, V> {
      * 4.после того как прошли все элементы сохраняем новую таблицу под старым именем table
      */
     private void expand() {
-        if (size / capacity >= (int) LOAD_FACTOR) {
+        if ((float) size / capacity >= LOAD_FACTOR) {
             capacity = capacity * 2;
             MapEntry<K, V>[] tableNew = new MapEntry[capacity];
-            for (int i = 0; i < table.length; i++) {
-                if (!Objects.isNull(i) && table[i] != null) {
-                    tableNew[indexFor(hash(table[i].key.hashCode()))] = table[i];
+            for (MapEntry<K, V> kvMapEntry : table) {
+                if (Objects.nonNull(kvMapEntry)) {
+                    tableNew[indexFor(hash((Integer) kvMapEntry.key))] = kvMapEntry;
                 }
             }
             modCount++;
@@ -126,7 +123,7 @@ public class SimpleMap<K, V> implements Map<K, V> {
     public V get(K key) {
         V rsl = null;
         int i = 0;
-        if (key != null) {
+        if (Objects.nonNull(key)) {
             i = iB(key);
         }
         if (table[i] != null && table[i].key.hashCode() == key.hashCode() && Objects.equals(table[i].key, key)) {
@@ -178,10 +175,10 @@ public class SimpleMap<K, V> implements Map<K, V> {
                 if (modCount != expectedModCount) {
                     throw new ConcurrentModificationException();
                 }
-                while (table.length != cursor && table[cursor] == null) {
+                while (cursor < capacity && table[cursor] == null) {
                     cursor++;
                 }
-                return cursor < table.length - 1;
+                return cursor < capacity - 1;
             }
 
             /**
