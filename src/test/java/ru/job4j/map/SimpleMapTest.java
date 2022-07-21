@@ -155,7 +155,7 @@ class SimpleMapTest {
         for (Integer integer : map) {
             listKey.add(integer);
         }
-        assertThat(listKey).hasSize(7).contains(0, 1, 2, 3, 4, 8, 16);
+        assertThat(listKey).hasSize(7).contains(0, 1, 2, 3, 4, 8, 15);
     }
 
     @Test
@@ -169,6 +169,6 @@ class SimpleMapTest {
         for (Integer integer : map) {
             listKey.add(integer);
         }
-        assertThat(listKey).hasSize(6).contains(0, 1, 2, 3, 4, 5, 6);
+        assertThat(listKey).hasSize(7).contains(0, 1, 2, 3, 4, 5, 6);
     }
 }
