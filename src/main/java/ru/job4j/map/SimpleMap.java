@@ -6,8 +6,8 @@ import java.util.*;
  * Реализация собственной структуры данных - HashMap
  *
  * @author Alex_life
- * @version 7.0
- * @since 20.07.2022
+ * @version 8.0
+ * @since 21.07.2022
  */
 public class SimpleMap<K, V> implements Map<K, V> {
 
@@ -46,14 +46,10 @@ public class SimpleMap<K, V> implements Map<K, V> {
     @Override
     public boolean put(K key, V value) {
         expand();
-        boolean rsl;
-        int i = 0;
-        if (key != null) {
-            i = iB(key);
-        }
-        if (table[i] == null) {
+        int i = iB(key);
+        boolean rsl = true;
+        if (Objects.isNull(table[i])) {
             table[i] = new MapEntry<>(key, value);
-            rsl = true;
             size++;
             modCount++;
         } else {
@@ -64,11 +60,16 @@ public class SimpleMap<K, V> implements Map<K, V> {
 
     /**
      * метод hash вычисляет хэш ключа бакета
-     * @param hashCode на вход подаем хэшкод уже вычисленный внутренней реализацией
+     * @param K key на вход подаем хэшкод уже вычисленный внутренней реализацией
      * @return хэш реализованный нашим собственным способом. хэш-формула может быть разная
      */
-    private int hash(int hashCode) {
-        return hashCode ^ hashCode >>> 16;
+    private int hash(K key) {
+        int rsl = 0;
+        if (Objects.nonNull(key)) {
+            int hkTemp = key.hashCode();
+            rsl = hkTemp ^ hkTemp >>> 16;
+        }
+        return rsl;
     }
 
     /**
@@ -86,7 +87,7 @@ public class SimpleMap<K, V> implements Map<K, V> {
      * @return вычесленный индекс для бакета
      */
     public int iB(K key) {
-        return indexFor(hash(key.hashCode()));
+        return indexFor(hash(key));
     }
 
     /**
@@ -103,7 +104,7 @@ public class SimpleMap<K, V> implements Map<K, V> {
             MapEntry<K, V>[] tableNew = new MapEntry[capacity];
             for (MapEntry<K, V> kvMapEntry : table) {
                 if (Objects.nonNull(kvMapEntry)) {
-                    tableNew[indexFor(hash((Integer) kvMapEntry.key))] = kvMapEntry;
+                    tableNew[indexFor(hash(kvMapEntry.key))] = kvMapEntry;
                 }
             }
             modCount++;
@@ -126,7 +127,7 @@ public class SimpleMap<K, V> implements Map<K, V> {
         if (Objects.nonNull(key)) {
             i = iB(key);
         }
-        if (table[i] != null && table[i].key.hashCode() == key.hashCode() && Objects.equals(table[i].key, key)) {
+        if (table[i] != null && Objects.equals(table[i].key, key)) {
             rsl = table[i].value;
         }
         return rsl;
@@ -144,14 +145,17 @@ public class SimpleMap<K, V> implements Map<K, V> {
     public boolean remove(K key) {
         boolean rsl = false;
         int i = 0;
-        if (key != null) {
+        if (Objects.nonNull(key)) {
             i = iB(key);
         }
-        if (table[i] != null && table[i].key.hashCode() == key.hashCode() && Objects.equals(table[i].key, key)) {
-            table[i] = null;
-            size--;
-            modCount++;
-            rsl = true;
+        if (table[i] != null) {
+            assert key != null;
+            if (Objects.equals(table[i].key, key)) {
+                table[i] = null;
+                size--;
+                modCount++;
+                rsl = true;
+            }
         }
         return rsl;
     }
@@ -178,7 +182,7 @@ public class SimpleMap<K, V> implements Map<K, V> {
                 while (cursor < capacity && table[cursor] == null) {
                     cursor++;
                 }
-                return cursor < capacity - 1;
+                return cursor < capacity;
             }
 
             /**
