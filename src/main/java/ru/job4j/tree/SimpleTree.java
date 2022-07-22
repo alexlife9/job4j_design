@@ -1,11 +1,16 @@
 package ru.job4j.tree;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Queue;
+import java.util.function.Predicate;
+
 /**
  * Создание элементарной структуры дерева
  *
  * @author Alex_life
- * @version 1.0
+ * @version 2.0
  * @since 22.07.2022
  */
 public class SimpleTree<E> implements Tree<E> {
@@ -34,10 +39,22 @@ public class SimpleTree<E> implements Tree<E> {
         Node<E> nodeParent = findBy(parent).get();
         Node<E> nodeChild = new Node<>(child);
 
-        if (!findBy(child).isPresent() && findBy(parent).isPresent()) {
+        if (findBy(child).isEmpty() && findBy(parent).isPresent()) {
             nodeParent.children.add(nodeChild);
         }
         return rsl;
+    }
+
+
+
+    @Override
+    public boolean isBinary() {
+        return false;
+    }
+
+    private Optional<Node<E>> findByPredicate(Predicate<Node<E>> condition) {
+
+        return null;
     }
 
     /**
