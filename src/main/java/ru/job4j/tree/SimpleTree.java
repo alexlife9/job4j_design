@@ -10,7 +10,8 @@ import java.util.function.Predicate;
  * Создание элементарной структуры дерева
  *
  * @author Alex_life
- * @version 2.0
+ * @version 3.0
+ * добавил методы isBinary и findByPredicate
  * @since 22.07.2022
  */
 public class SimpleTree<E> implements Tree<E> {
@@ -41,17 +42,35 @@ public class SimpleTree<E> implements Tree<E> {
 
         if (findBy(child).isEmpty() && findBy(parent).isPresent()) {
             nodeParent.children.add(nodeChild);
+            rsl = true;
         }
         return rsl;
     }
 
-
-
+    /**
+     * метод проверяет количество дочерних узлов. если их больше 2, то дерево не бинарное
+     * @return true если узлов не больше 2
+     */
     @Override
     public boolean isBinary() {
-        return false;
+        Optional<Node<E>> node = Optional.empty();
+        boolean rsl = true;
+        Queue<Node<E>> data = new LinkedList<>();
+        data.offer(this.root);
+        while (!data.isEmpty()) {
+            Node<E> el = data.poll();
+            if (el.children.size() > 2) {
+                rsl = false;
+            }
+        }
+        return rsl;
     }
 
+    /**
+     * в этот метод вынесли алгоритм поиска заданного узла
+     * @param condition
+     * @return
+     */
     private Optional<Node<E>> findByPredicate(Predicate<Node<E>> condition) {
 
         return null;
