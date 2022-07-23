@@ -10,9 +10,9 @@ import java.util.function.Predicate;
  * Создание элементарной структуры дерева
  *
  * @author Alex_life
- * @version 3.0
- * добавил методы isBinary и findByPredicate
- * @since 22.07.2022
+ * @version 4.0
+ * исправил метод isBinary и тесты
+ * @since 23.07.2022
  */
 public class SimpleTree<E> implements Tree<E> {
     private final Node<E> root;
@@ -61,7 +61,9 @@ public class SimpleTree<E> implements Tree<E> {
             Node<E> el = data.poll();
             if (el.children.size() > 2) {
                 rsl = false;
+                break;
             }
+            data.addAll(el.children);
         }
         return rsl;
     }
