@@ -10,8 +10,8 @@ import java.util.function.Predicate;
  * Создание элементарной структуры дерева
  *
  * @author Alex_life
- * @version 4.0
- * исправил метод isBinary и тесты
+ * @version 5.0
+ * вынес в метод findByPredicate общую логику методов isBinary и findBy
  * @since 23.07.2022
  */
 public class SimpleTree<E> implements Tree<E> {
@@ -48,19 +48,27 @@ public class SimpleTree<E> implements Tree<E> {
     }
 
     /**
-     * метод проверяет количество дочерних узлов. если их больше 2, то дерево не бинарное
-     * @return true если узлов не больше 2
+     * в этот метод вынесли алгоритм поиска заданного узла
+     * @param condition - параметр условия поиска
+     * @return возвращаем искомый узел если условие выполнено
+     *
+     * 1. наш узел rsl изначально пустой Optional.empty()
+     * 2. создаем новый связный список
+     * 3. голова списка начинается с root
+     * 4. пока наш список не пустой идем по циклу и
+     * 5. извлекаем из списка узлы и записываем их в переменую el
+     * 6. подставляем любое условие condition и проверем верно ли оно для найденного элемента
+     * 7. если условие выполняется, то записываем этот узел в список rsl и останавливаем проверку
+     * 8. после чего записываем все найденные узлы в постоянный список children и начинаем проверку while снова
      */
-    @Override
-    public boolean isBinary() {
-        Optional<Node<E>> node = Optional.empty();
-        boolean rsl = true;
+    private Optional<Node<E>> findByPredicate(Predicate<Node<E>> condition) {
+        Optional<Node<E>> rsl = Optional.empty();
         Queue<Node<E>> data = new LinkedList<>();
         data.offer(this.root);
         while (!data.isEmpty()) {
             Node<E> el = data.poll();
-            if (el.children.size() > 2) {
-                rsl = false;
+            if (condition.test(el)) {
+                rsl = Optional.of(el);
                 break;
             }
             data.addAll(el.children);
@@ -69,13 +77,13 @@ public class SimpleTree<E> implements Tree<E> {
     }
 
     /**
-     * в этот метод вынесли алгоритм поиска заданного узла
-     * @param condition
-     * @return
+     * метод проверяет количество дочерних узлов. если их больше 2, то дерево не бинарное
+     * @return true если узлов не больше 2
      */
-    private Optional<Node<E>> findByPredicate(Predicate<Node<E>> condition) {
-
-        return null;
+    @Override
+    public boolean isBinary() {
+        Predicate<Node<E>> predicate = E -> E.children.size() > 2;
+        return findByPredicate(predicate).isEmpty();
     }
 
     /**
@@ -85,18 +93,8 @@ public class SimpleTree<E> implements Tree<E> {
      */
     @Override
     public Optional<Node<E>> findBy(E value) {
-        Optional<Node<E>> rsl = Optional.empty();
-        Queue<Node<E>> data = new LinkedList<>();
-        data.offer(this.root);
-        while (!data.isEmpty()) {
-            Node<E> el = data.poll();
-            if (el.value.equals(value)) {
-                rsl = Optional.of(el);
-                break;
-            }
-            data.addAll(el.children);
-        }
-        return rsl;
+        Predicate<Node<E>> predicate = E -> E.value.equals(value);
+        return findByPredicate(predicate);
     }
 
     @Override
