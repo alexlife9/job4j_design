@@ -19,7 +19,7 @@ import java.util.Set;
  *  что ранее он был в множестве previous, но теперь во множестве current его нет.
  *
  * @author Alex_life
- * @version 1.0
+ * @version 2.0
  * @since 24.07.2022
  */
 
@@ -42,9 +42,13 @@ public class Analize {
      * 3.делаем тоже самое для изменненого множества
      * 4.еще одним циклом проходим по хэшмапе prevMap c начальными элементами и ищем отличия с хэшпамой currMap
      *  для этого сравниваем все элементы на изменения состояния
+     * 5.если ключ элемента был в начальной карте prevMap, но в измененной карте currMap равен null, это значит что
+     * данный элемент удален - увеличиваем счетчик удалений юзеров.
+     * 6.если во множестве ключей карты currMap содержится такой же ключ в карте prevMap,
+     * то проверяем равенство значений по этим ключам в обеих картах и если они НЕ равны - значит элемент был изменен.
      */
     public static Info diff(Set<User> previous, Set<User> current) {
-        int addUser = current.size() - previous.size();
+        int addUser = 0;
         int changeUser = 0;
         int deleteUser = 0;
         Map<Integer, String> prevMap = new HashMap<>();
@@ -60,11 +64,11 @@ public class Analize {
             if (currMap.get(mapPass.getKey()) == null) {
                 deleteUser++;
             }
-            if (currMap.get(mapPass.getKey()).equals(prevMap.get(mapPass.getKey()))
-                    && !currMap.get(mapPass.getValue()).equals(prevMap.get(mapPass.getValue()))) {
+            if (currMap.containsKey(mapPass.getKey()) && !currMap.containsValue(mapPass.getValue())) {
                 changeUser++;
             }
         }
+        addUser = current.size() - previous.size() + deleteUser;
         return new Info(addUser, changeUser, deleteUser);
 
     }
