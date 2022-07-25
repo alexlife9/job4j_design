@@ -25,15 +25,15 @@ public class LogFilter {
      * 8.сравниваем значение которое ищем с массивом строк (с учетов позиции на которой находится наш искомое слово)
      * 9.если найдено, то добавляем всю строчку в лист стрингов
      * 10.иначе продолжаем поиск на следующей строке в файле
-     * @param file входящий файл log.txt
+     * @param fileIn входящий файл log.txt
      * @return возвращает строки которые содержат заданное значение
      */
-    public List<String> filter(String file) {
+    public List<String> filter(String fileIn) {
         List<String> list = new ArrayList<>();
         String searchValue = "404";
         int position = -2;
 
-        try (BufferedReader in = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader in = new BufferedReader(new FileReader(fileIn))) {
             String line = in.readLine();
             String[] array;
             while (line != null) {
@@ -51,16 +51,16 @@ public class LogFilter {
 
     /**
      * метод save сохраняет в файл список отфильтрованных строк по заданному условию
-     * 1.передаем в буфер исходный поток file
-     * 2.в переменной out собираем отфильтрованные строки
-     * 3.записываем их в файл log.txt
-     * @param log отфильтрованный список по заданному условию
-     * @param file начальный входящий файл на фильтрацию log.txt
+     * 1.задаем поток на запись через буфер
+     * 2.в переменную out собираем отфильтрованные строки лога
+     * 3.записываем их в файл log.txt (задаем в методе мэйн)
+     * @param log отфильтрованный список по заданному условию (List<String> log)
+     * @param fileOut файл в который будет писаться log (задаем в методе мэйн)
      */
-    public static void save(List<String> log, String file) {
+    public static void save(List<String> log, String fileOut) {
         try (PrintWriter out = new PrintWriter(
                 new BufferedOutputStream(
-                        new FileOutputStream(file)
+                        new FileOutputStream(fileOut)
                 ))) {
             out.println(log);
 
