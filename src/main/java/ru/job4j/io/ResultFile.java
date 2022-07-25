@@ -2,13 +2,14 @@ package ru.job4j.io;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * FileOutputStream - запись данных в файл
  *
  * @author Alex_life
- * @version 1.0
- * @since 25.07.2022
+ * @version 2.0
+ * @since 26.07.2022
  */
 public class ResultFile {
 
@@ -28,10 +29,9 @@ public class ResultFile {
 
     public static void main(String[] args) {
         try (FileOutputStream out = new FileOutputStream("table.txt")) {
-            for (int row = 1; row <= 5; row++) {
-                for (int cell = 1; cell <= 5; cell++) {
-                    out.write(row * cell);
-                    out.write(" ".getBytes());
+            for (byte row = 1; row <= 5; row++) {
+                for (byte cell = 1; cell <= 5; cell++) {
+                    out.write((row * cell + " ").getBytes(StandardCharsets.UTF_8));
                 }
                 out.write(System.lineSeparator().getBytes());
             }
