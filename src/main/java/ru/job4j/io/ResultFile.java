@@ -30,7 +30,8 @@ public class ResultFile {
         try (FileOutputStream out = new FileOutputStream("table.txt")) {
             for (int row = 1; row <= 5; row++) {
                 for (int cell = 1; cell <= 5; cell++) {
-                    out.write((row * cell + System.lineSeparator()).getBytes());
+                    out.write(row * cell);
+                    out.write(" ".getBytes());
                 }
                 out.write(System.lineSeparator().getBytes());
             }
