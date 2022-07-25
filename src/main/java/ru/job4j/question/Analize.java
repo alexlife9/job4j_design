@@ -48,7 +48,7 @@ public class Analize {
      * то проверяем равенство значений по этим ключам в обеих картах и если они НЕ равны - значит элемент был изменен.
      */
     public static Info diff(Set<User> previous, Set<User> current) {
-        int addUser = 0;
+        int addUser;
         int changeUser = 0;
         int deleteUser = 0;
         Map<Integer, String> prevMap = new HashMap<>();
@@ -70,8 +70,6 @@ public class Analize {
         }
         addUser = current.size() - previous.size() + deleteUser;
         return new Info(addUser, changeUser, deleteUser);
-
     }
-
 }
 
