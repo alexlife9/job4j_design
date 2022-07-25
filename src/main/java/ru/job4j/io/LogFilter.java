@@ -64,11 +64,9 @@ public class LogFilter {
                 ))) {
             out.println(log);
 
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public static void main(String[] args) {
