@@ -11,7 +11,7 @@ import java.util.StringJoiner;
  * Читаем файл конфигурации
  *
  * @author Alex_life
- * @version 2.0
+ * @version 4.0
  * @since 27.07.2022
  */
 public class Config {
@@ -33,10 +33,12 @@ public class Config {
      *
      * 1.считываем файл path, передаем его в буферный поток read
      * 2.с помощью метода readLine записываем из файла всю информацию построчно в переменную line
-     * 3.создаем массив стрингов
-     * 4.пока строча не пустая, и если она не содержит комментарий
+     * 3.создаем массив стрингов для хранения отдельных частей строчки
+     * 4.пока строчка не пустая, и если она не содержит комментарий
      *   делим строчку на 2 части - до и после знака "="
-     * 5.добавляем в Map values пару ключ-значение в виде левой и правой части разрезанной строки
+     * 5.проверяем что частей ровно 2 И ни одна из них не является пустой И строка не начинается с =
+     * и если это не так - выбрасываем исклчюение
+     * 6.иначе, добавляем в Map values пару ключ-значение в виде левой и правой части разрезанной строки
      *
      */
     public void load() {
@@ -44,9 +46,9 @@ public class Config {
             String line = read.readLine();
             String[] array;
             while (line != null) {
-                if (!line.startsWith("#") && !line.startsWith("=") && !line.isEmpty()) {
-                    array = line.split("=");
-                    if (array.length != 2) {
+                if (!line.startsWith("#") && !line.isEmpty()) {
+                    array = line.split("=", 2);
+                    if (array.length != 2 && line.isEmpty() && line.startsWith("=")) {
                         throw new IllegalArgumentException("неполная пара");
                     }
                     values.put(array[0], array[1]);
@@ -78,7 +80,7 @@ public class Config {
     }
 
     public static void main(String[] args) {
-        String path = "./data/pair_without_comment.properties";
+        String path = "./data/pair_with_pattern_violation_and_empty_line_and_comment.properties";
         Config config = new Config(path);
         config.load();
     }

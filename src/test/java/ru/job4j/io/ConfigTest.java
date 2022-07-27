@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.*;
  * как ключ "ключ" и значение "значение=1" или "значение=" соответственно.
  *
  * @author Alex_life
- * @version 2.0
+ * @version 3.0
  * @since 27.07.2022
  */
 
@@ -42,6 +42,7 @@ class ConfigTest {
         String path = "./data/pair_with_pattern_violation_and_empty_line_and_comment.properties";
         Config config = new Config(path);
         config.load();
+
         assertThat(config.value("name3")).isEqualTo("Value3");
     }
 
@@ -52,5 +53,4 @@ class ConfigTest {
         config.load();
         assertThat(config.value("name4")).isEqualTo("Value4");
     }
-
 }
