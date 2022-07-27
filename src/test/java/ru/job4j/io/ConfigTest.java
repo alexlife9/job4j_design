@@ -34,15 +34,15 @@ class ConfigTest {
         String path = "./data/pair_with_comment_and_empty_line.properties";
         Config config = new Config(path);
         config.load();
-        assertThat(config.value("name2")).isEqualTo("Имя2");
+        assertThat(config.value("name2")).isEqualTo("Value2");
     }
 
     @Test
     void whenPairWithPatternViolationAndEmptyLineAndComment() {
-        String path = "./data/pair_with_comment_and_empty_line.properties";
+        String path = "./data/pair_with_pattern_violation_and_empty_line_and_comment.properties";
         Config config = new Config(path);
         config.load();
-        assertThat(config.value("name3")).isEqualTo("Имя3");
+        assertThat(config.value("name3")).isEqualTo("Value3");
     }
 
     @Test
@@ -50,7 +50,7 @@ class ConfigTest {
         String path = "./data/pair_with_pattern_violation.properties";
         Config config = new Config(path);
         config.load();
-        assertThat(config.value("name4")).isEqualTo("Имя4");
+        assertThat(config.value("name4")).isEqualTo("Value4");
     }
 
 }

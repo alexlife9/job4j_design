@@ -44,14 +44,15 @@ public class Config {
             String line = read.readLine();
             String[] array;
             while (line != null) {
-                if (line.startsWith("#")) {
-                    array = line.split("=", 2);
-                    if (array[1].isEmpty()) {
+                if (!line.startsWith("#") && !line.startsWith("=") && !line.isEmpty()) {
+                    array = line.split("=");
+                    if (array.length != 2) {
                         throw new IllegalArgumentException("неполная пара");
                     }
                     values.put(array[0], array[1]);
                 }
                 line = read.readLine();
+                System.out.println(line);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -77,6 +78,8 @@ public class Config {
     }
 
     public static void main(String[] args) {
-        System.out.println(new Config("app.properties"));
+        String path = "./data/pair_without_comment.properties";
+        Config config = new Config(path);
+        config.load();
     }
 }
