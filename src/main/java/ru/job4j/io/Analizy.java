@@ -44,14 +44,14 @@ public class Analizy {
                 if (startLogs == null && (line.contains("400") || line.contains("500"))) {
                     line.split(" ");
                     array = line.split(" ");
-                    startLogs = array[0];
+                    startLogs = array[1];
                 }
                 if ((line.contains("400") || line.contains("500")) && startLogs.contains("200")){
                     array = line.split(" ");
-                    endLogs = array[0];
+                    endLogs = array[1];
                 }
+                timesLogs.add(startLogs + ";" + endLogs);
             }
-            timesLogs.add(startLogs + ";" + endLogs);
 
 
         } catch (IOException e) {
