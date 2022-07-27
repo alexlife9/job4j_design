@@ -44,7 +44,7 @@ public class Config {
             String line = read.readLine();
             String[] array;
             while (line != null) {
-                if (line.startsWith("#") && line.isEmpty()) {
+                if (line.startsWith("#")) {
                     array = line.split("=", 2);
                     if (array[1].isEmpty()) {
                         throw new IllegalArgumentException("неполная пара");
