@@ -11,10 +11,15 @@ import java.util.StringJoiner;
  * Читаем файл конфигурации
  *
  * @author Alex_life
- * @version 1.0
- * @since 26.07.2022
+ * @version 2.0
+ * @since 27.07.2022
  */
 public class Config {
+
+    /**
+     * path - файл настроек которые надо прочитать
+     * values - карта с прочитанным файлом уже с учетом исключений
+     */
     private final String path;
     private final Map<String, String> values = new HashMap<>();
 
@@ -39,10 +44,14 @@ public class Config {
             String line = read.readLine();
             String[] array;
             while (line != null) {
-                if (line.contains("#")) {
+                if (line.startsWith("#") && line.isEmpty()) {
                     array = line.split("=", 2);
+                    if (array[1].isEmpty()) {
+                        throw new IllegalArgumentException("неполная пара");
+                    }
                     values.put(array[0], array[1]);
                 }
+                line = read.readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -50,10 +59,10 @@ public class Config {
     }
 
     public String value(String key) {
-        if (key == null) {
+        if (values.get(key) == null) {
             throw new UnsupportedOperationException("Don't impl this method yet!");
         }
-        return key;
+        return values.get(key);
     }
 
     @Override
