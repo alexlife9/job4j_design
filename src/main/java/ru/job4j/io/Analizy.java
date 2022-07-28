@@ -8,8 +8,8 @@ import java.util.List;
  * Анализ доступности сервера
  *
  * @author Alex_life
- * @version 1.0
- * @since 27.07.2022
+ * @version 2.0
+ * @since 28.07.2022
  */
 public class Analizy {
 
@@ -36,29 +36,34 @@ public class Analizy {
     public static void unavailable(String source, String target) {
         String startLogs = null;
         String endLogs = null;
-        String[] array;
         List<String> timesLogs = new ArrayList<>();
         try (BufferedReader in = new BufferedReader(new FileReader(source))) {
-            String line = in.readLine();
-            while (line != null) {
-                if (startLogs == null && (line.contains("400") || line.contains("500"))) {
-                    line.split(" ");
-                    array = line.split(" ");
-                    startLogs = array[1];
+            for (String line = in.readLine(); line != null; line = in.readLine()) {
+                if (startLogs == null && line.contains("200")) {
+                    startLogs = line;
+                } else if (line.contains("400") || line.contains("500")) {
+                    startLogs = line;
+//                    String[] arrayStart = line.split(" ");
+//                    timesLogs.add(arrayStart[1]);
                 }
-                if ((line.contains("400") || line.contains("500")) && startLogs.contains("200")){
-                    array = line.split(" ");
-                    endLogs = array[1];
-                }
-                timesLogs.add(startLogs + ";" + endLogs);
-            }
 
+                if (startLogs.contains("200") && (line.contains("400") || line.contains("500"))) {
+                    endLogs = line;
+                } else if ((startLogs.contains("400") || startLogs.contains("500")) && line.contains("200")) {
+                    endLogs = line;
+//                    String[] arrayEnd = line.split(" ");
+//                    timesLogs.add(arrayEnd[1]);
+                }
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try (PrintWriter out = new PrintWriter(new BufferedOutputStream(new FileOutputStream(target)))) {
+            String[] arrayStart = startLogs.split(" ");
+            String[] arrayEnd = endLogs.split(" ");
+            timesLogs.add(arrayStart[1] + ";" + arrayEnd[1]);
             timesLogs.forEach(out::println);
         } catch (IOException e) {
             e.printStackTrace();
@@ -66,6 +71,12 @@ public class Analizy {
     }
 
     public static void main(String[] args) {
-        unavailable("./data/server.log", "./data/unavailable.csv");
+        unavailable("./data/server.log", "./data/logoutMy.csv");
+        try (PrintWriter out = new PrintWriter(new FileOutputStream("./data/expected.csv"))) {
+            out.println("10:58:01;10:59:01");
+            out.println("11:01:02;11:02:02");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

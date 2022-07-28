@@ -10,8 +10,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 /**
  * @author Alex_life
- * @version 1.0
- * @since 27.07.2022
+ * @version 2.0
+ * @since 28.07.2022
  */
 public class AnalizyTest {
     @Test
@@ -31,6 +31,7 @@ public class AnalizyTest {
         try (BufferedReader in = new BufferedReader(new FileReader(target))) {
             in.lines().forEach(rsl::append);
         }
-        assertThat("10:58:01;10:59:01" + "11:01:02;11:02:02").isEqualTo(rsl.toString());
+        assertThat(rsl.toString()).isEqualTo("10:58:01;10:59:01");
+        assertThat(rsl.toString()).isEqualTo("11:01:02;11:02:02");
     }
 }
