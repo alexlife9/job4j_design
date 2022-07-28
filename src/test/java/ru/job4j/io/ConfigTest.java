@@ -1,7 +1,8 @@
 package ru.job4j.io;
 
 import org.junit.jupiter.api.Test;
-import static org.assertj.core.api.Assertions.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  *  Читаем файл конфигурации
@@ -30,20 +31,19 @@ class ConfigTest {
     }
 
     @Test
+    void whenPairWithPatternViolationAndEmptyLineAndComment() {
+        String path = "./data/pair_with_pattern_violation_and_empty_line_and_comment.properties";
+        Config config = new Config(path);
+        config.load();
+        assertThat(config.value("name3")).isEqualTo("Value3");
+    }
+
+    @Test
     void whenPairWithCommentAndEmptyLine() {
         String path = "./data/pair_with_comment_and_empty_line.properties";
         Config config = new Config(path);
         config.load();
         assertThat(config.value("name2")).isEqualTo("Value2");
-    }
-
-    @Test
-    void whenPairWithPatternViolationAndEmptyLineAndComment() {
-        String path = "./data/pair_with_pattern_violation_and_empty_line_and_comment.properties";
-        Config config = new Config(path);
-        config.load();
-
-        assertThat(config.value("name3")).isEqualTo("Value3");
     }
 
     @Test

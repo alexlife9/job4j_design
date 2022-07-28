@@ -5,14 +5,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
  * Читаем файл конфигурации
  *
  * @author Alex_life
- * @version 4.0
- * @since 27.07.2022
+ * @version 5.0
+ * @since 29.07.2022
  */
 public class Config {
 
@@ -44,17 +45,17 @@ public class Config {
     public void load() {
         try (BufferedReader read = new BufferedReader(new FileReader(this.path))) {
             String line = read.readLine();
-            String[] array;
             while (line != null) {
-                if (!line.startsWith("#") && !line.isEmpty()) {
-                    array = line.split("=", 2);
-                    if (array.length != 2 && (array[0] == null || array[1] == null || array[0].equals(line.startsWith("=")))) {
-                        throw new IllegalArgumentException("неполная пара");
+                if ((!line.startsWith("#")) && !line.isEmpty()) {
+                    String[] array = line.split("=", 2);
+                    if (array.length != 2) {
+                        throw new IllegalArgumentException();
+                    } else if (!array[0].isEmpty() && !array[1].isEmpty()) {
+                        values.put(array[0], array[1]);
+                        System.out.println(values);
                     }
-                    values.put(array[0], array[1]);
                 }
                 line = read.readLine();
-                System.out.println(line);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -83,5 +84,32 @@ public class Config {
         String path = "./data/pair_with_pattern_violation_and_empty_line_and_comment.properties";
         Config config = new Config(path);
         config.load();
+    }
+}
+
+class Example {
+    public static void main(String[] args) {
+        String s = "k=";
+        String[] a = s.split("=", 2);
+        System.out.println(a.length);
+        System.out.println(Objects.isNull(a[0]));
+        System.out.println(Objects.isNull(a[1]));
+        System.out.println(a[0].isEmpty());
+        System.out.println(a[1].isEmpty());
+        System.out.println(a[0] + a[1]);
+        System.out.println("значение первой ячейки при s = \"k=\" :" + a[0] + ": между двоеточий");
+        System.out.println("значение второй ячейки при s = \"k=\" :" + a[1] + ": между двоеточий");
+        System.out.println();
+
+        String s1 = "=k";
+        String[] a1 = s1.split("=", 2);
+        System.out.println(a1.length);
+        System.out.println(Objects.isNull(a1[0]));
+        System.out.println(Objects.isNull(a1[1]));
+        System.out.println(a1[0].isEmpty());
+        System.out.println(a1[1].isEmpty());
+        System.out.println(a1[0] + a1[1]);
+        System.out.println("значение первой ячейки при s = \"=k\" :" + a1[0] + ": между двоеточий");
+        System.out.println("значение второй ячейки при s = \"=k\" :" + a1[1] + ": между двоеточий");
     }
 }
