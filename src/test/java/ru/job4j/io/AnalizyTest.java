@@ -34,4 +34,5 @@ public class AnalizyTest {
         assertThat(rsl.toString()).isEqualTo("10:58:01;10:59:01");
         assertThat(rsl.toString()).isEqualTo("11:01:02;11:02:02");
     }
+
 }
