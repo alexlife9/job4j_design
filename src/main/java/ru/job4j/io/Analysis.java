@@ -8,10 +8,10 @@ import java.util.List;
  * Анализ доступности сервера
  *
  * @author Alex_life
- * @version 2.0
- * @since 28.07.2022
+ * @version 3.0
+ * @since 29.07.2022
  */
-public class Analizy {
+public class Analysis {
 
     /**
      * Метод unavailable() находит диапазоны когда сервер не работал и записывает их в файл
@@ -39,20 +39,16 @@ public class Analizy {
         List<String> timesLogs = new ArrayList<>();
         try (BufferedReader in = new BufferedReader(new FileReader(source))) {
             for (String line = in.readLine(); line != null; line = in.readLine()) {
-                if (startLogs == null && line.contains("200")) {
+                if (line.contains("200") && startLogs == null) {
                     startLogs = line;
-                } else if (line.contains("400") || line.contains("500")) {
+                } else if ((line.contains("400") || line.contains("500")) && startLogs == null) {
                     startLogs = line;
-//                    String[] arrayStart = line.split(" ");
-//                    timesLogs.add(arrayStart[1]);
                 }
 
-                if (startLogs.contains("200") && (line.contains("400") || line.contains("500"))) {
+                if ((line.contains("400") || line.contains("500")) && startLogs.contains("200")) {
                     endLogs = line;
                 } else if ((startLogs.contains("400") || startLogs.contains("500")) && line.contains("200")) {
                     endLogs = line;
-//                    String[] arrayEnd = line.split(" ");
-//                    timesLogs.add(arrayEnd[1]);
                 }
             }
 
@@ -73,8 +69,7 @@ public class Analizy {
     public static void main(String[] args) {
         unavailable("./data/server.log", "./data/logoutMy.csv");
         try (PrintWriter out = new PrintWriter(new FileOutputStream("./data/expected.csv"))) {
-            out.println("10:58:01;10:59:01");
-            out.println("11:01:02;11:02:02");
+            out.println("10:57:01;11:02:02");
         } catch (Exception e) {
             e.printStackTrace();
         }
