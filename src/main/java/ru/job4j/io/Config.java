@@ -48,7 +48,7 @@ public class Config {
             while (line != null) {
                 if (!line.startsWith("#") && !line.isEmpty()) {
                     array = line.split("=", 2);
-                    if (array.length != 2 && line.isEmpty() && line.startsWith("=")) {
+                    if (array.length != 2 && (array[0] == null || array[1] == null || array[0].equals(line.startsWith("=")))) {
                         throw new IllegalArgumentException("неполная пара");
                     }
                     values.put(array[0], array[1]);
