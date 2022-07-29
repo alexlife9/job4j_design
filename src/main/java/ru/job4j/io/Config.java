@@ -12,7 +12,7 @@ import java.util.StringJoiner;
  * Читаем файл конфигурации
  *
  * @author Alex_life
- * @version 5.0
+ * @version 6.0
  * @since 29.07.2022
  */
 public class Config {
@@ -48,12 +48,11 @@ public class Config {
             while (line != null) {
                 if ((!line.startsWith("#")) && !line.isEmpty()) {
                     String[] array = line.split("=", 2);
-                    if (array.length != 2) {
-                        throw new IllegalArgumentException();
-                    } else if (!array[0].isEmpty() && !array[1].isEmpty()) {
-                        values.put(array[0], array[1]);
-                        System.out.println(values);
+                    if ((array[0].isEmpty() || array[1].isEmpty())) {
+                        throw new IllegalArgumentException("неполная пара");
                     }
+                    values.put(array[0], array[1]);
+                    System.out.println(values);
                 }
                 line = read.readLine();
             }
