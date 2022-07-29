@@ -14,7 +14,7 @@ import java.io.File;
  * с помощью цикла выводим всё содержимое директории
  *
  * @author Alex_life
- * @version 1.0
+ * @version 2.0
  * @since 29.07.2022
  */
 public class Dir {
@@ -26,9 +26,10 @@ public class Dir {
         if (!file.isDirectory()) {
             throw new IllegalArgumentException(String.format("Not directory %s", file.getAbsoluteFile()));
         }
-        System.out.println(String.format("размер диска С : %s", file.getTotalSpace() / 1073741824 + " Gigabytes"));
+        System.out.println(String.format("размер диска С : %s Gigabytes", file.getTotalSpace() / 1073741824));
         for (File subfile : file.listFiles()) {
-            System.out.println(String.format("размер файла (но не содержимого) для папки: %s %s %s", subfile.getName(), "составляет:", file.length()));
+            System.out.println(String.format("размер файла (но не содержимого) для папки: %s составляет: %s",
+                    subfile.getName(), file.length()));
         }
     }
 }
