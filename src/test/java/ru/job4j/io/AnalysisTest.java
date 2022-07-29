@@ -12,8 +12,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
  * Анализ доступности сервера
  *
  * @author Alex_life
- * @version 3.0
- * @since 29.07.2022
+ * @version 4.0
+ * @since 30.07.2022
  */
 public class AnalysisTest {
     @Test
@@ -21,7 +21,7 @@ public class AnalysisTest {
         File source = tempDir.resolve("source.txt").toFile();
         try (PrintWriter out = new PrintWriter(source)) {
             out.println("200 10:56:01");
-            out.println("200 10:57:01");
+            out.println("500 10:57:01");
             out.println("400 10:58:01");
             out.println("200 10:59:01");
             out.println("500 11:01:02");
@@ -33,8 +33,7 @@ public class AnalysisTest {
         try (BufferedReader in = new BufferedReader(new FileReader(target))) {
             in.lines().forEach(rsl::append);
         }
-        assertThat(rsl.toString()).isEqualTo("10:58:01;10:59:01");
-        assertThat(rsl.toString()).isEqualTo("11:01:02;11:02:02");
+        assertThat(rsl.toString()).isEqualTo("10:57:01;10:59:01" + "11:01:02;11:02:02");
     }
 
     @Test
