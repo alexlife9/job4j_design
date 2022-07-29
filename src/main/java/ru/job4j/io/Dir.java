@@ -28,7 +28,7 @@ public class Dir {
         }
         System.out.println(String.format("размер диска С : %s", file.getTotalSpace() / 1073741824 + " Gigabytes"));
         for (File subfile : file.listFiles()) {
-            System.out.println(subfile.getName() + " - размер файла (но не содержимого): " + file.length() + " Byte");
+            System.out.println(String.format("размер файла (но не содержимого) для папки: %s %s %s", subfile.getName(), "составляет:", file.length()));
         }
     }
 }
