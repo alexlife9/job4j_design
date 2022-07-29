@@ -8,7 +8,7 @@ import java.util.List;
  * Анализ доступности сервера
  *
  * @author Alex_life
- * @version 3.0
+ * @version 4.0
  * @since 29.07.2022
  */
 public class Analysis {
@@ -34,20 +34,29 @@ public class Analysis {
      * @param target файл в который сохраняем результаты анализа в формате "начала периода;конец периода"
      */
     public static void unavailable(String source, String target) {
+        /**
+         * startLogs - начало записи интервала неработоспособности сервера
+         * endLogs - конец записи интервала неработоспособности сервера
+         * previousWork - факт работоспособности сервера: да/нет
+         */
         String startLogs = null;
         String endLogs = null;
+        boolean previousWork = true;
         List<String> timesLogs = new ArrayList<>();
         try (BufferedReader in = new BufferedReader(new FileReader(source))) {
             for (String line = in.readLine(); line != null; line = in.readLine()) {
-                if (line.contains("200") && startLogs == null) {
-                    startLogs = line;
-                } else if ((line.contains("400") || line.contains("500")) && startLogs == null) {
+                if (line.contains("400") || line.contains("500") && previousWork) {
+                    previousWork = false;
                     startLogs = line;
                 }
-
-                if ((line.contains("400") || line.contains("500")) && startLogs.contains("200")) {
-                    endLogs = line;
-                } else if ((startLogs.contains("400") || startLogs.contains("500")) && line.contains("200")) {
+                if (line.contains("200") && previousWork) {
+                    previousWork = false;
+                }
+                if ((line.contains("400") || line.contains("500")) && !previousWork) {
+                    line = in.readLine();
+                }
+                if (line.contains("200") && !previousWork) {
+                    previousWork = true;
                     endLogs = line;
                 }
             }
@@ -56,7 +65,9 @@ public class Analysis {
             e.printStackTrace();
         }
 
-        try (PrintWriter out = new PrintWriter(new BufferedOutputStream(new FileOutputStream(target)))) {
+        try (PrintWriter out = new PrintWriter(
+                new BufferedOutputStream(
+                        new FileOutputStream(target)))) {
             String[] arrayStart = startLogs.split(" ");
             String[] arrayEnd = endLogs.split(" ");
             timesLogs.add(arrayStart[1] + ";" + arrayEnd[1]);
@@ -67,11 +78,20 @@ public class Analysis {
     }
 
     public static void main(String[] args) {
-        unavailable("./data/server.log", "./data/logoutMy.csv");
-        try (PrintWriter out = new PrintWriter(new FileOutputStream("./data/expected.csv"))) {
+        unavailable("./data/server2.log", "./data/logoutMy2.csv");
+        try (PrintWriter out = new PrintWriter(new FileOutputStream("./data/expected2.csv"))) {
             out.println("10:57:01;11:02:02");
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        unavailable("./data/server1.log", "./data/logoutMy1.csv");
+        try (PrintWriter out = new PrintWriter(new FileOutputStream("./data/expected1.csv"))) {
+            out.println("10:57:01;10:59:01");
+            out.println("11:01:02;11:02:02");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -46,7 +46,7 @@ public class Config {
         try (BufferedReader read = new BufferedReader(new FileReader(this.path))) {
             String line = read.readLine();
             while (line != null) {
-                if ((!line.startsWith("#")) && !line.isEmpty() && line.contains("=")) {
+                if ((!line.startsWith("#")) && !line.isEmpty()) {
                     String[] array = line.split("=", 2);
                     if (array.length != 2 && (array[0].isEmpty() || array[1].isEmpty())) {
                         throw new IllegalArgumentException(String.format("неполная пара %s", line));
