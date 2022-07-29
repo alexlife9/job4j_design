@@ -46,10 +46,10 @@ public class Config {
         try (BufferedReader read = new BufferedReader(new FileReader(this.path))) {
             String line = read.readLine();
             while (line != null) {
-                if ((!line.startsWith("#")) && !line.isEmpty()) {
+                if ((!line.startsWith("#")) && !line.isEmpty() && line.contains("=")) {
                     String[] array = line.split("=", 2);
-                    if ((array[0].isEmpty() || array[1].isEmpty())) {
-                        throw new IllegalArgumentException("неполная пара");
+                    if (array.length != 2 && (array[0].isEmpty() || array[1].isEmpty())) {
+                        throw new IllegalArgumentException(String.format("неполная пара %s", line));
                     }
                     values.put(array[0], array[1]);
                     System.out.println(values);
@@ -100,7 +100,7 @@ class Example {
         System.out.println("значение второй ячейки при s = \"k=\" :" + a[1] + ": между двоеточий");
         System.out.println();
 
-        String s1 = "=k";
+        String s1 = "=";
         String[] a1 = s1.split("=", 2);
         System.out.println(a1.length);
         System.out.println(Objects.isNull(a1[0]));

@@ -53,4 +53,28 @@ class ConfigTest {
         config.load();
         assertThat(config.value("name4")).isEqualTo("Value4");
     }
+
+    @Test
+    void whenPairWithOnlySignEquals() {
+        String path = "./data/pair_with_only_sign_equals.properties";
+        Config config = new Config(path);
+        config.load();
+        assertThat(config.value("name5")).isEqualTo("Value5");
+    }
+
+    @Test
+    void whenPairWithoutSignEquals() {
+        String path = "./data/pair_without_sign_equals.properties";
+        Config config = new Config(path);
+        config.load();
+        assertThat(config.value("name6")).isEqualTo("Value6");
+    }
+
+    @Test
+    void whenPairWithKeyAndWithoutValue() {
+        String path = "./data/pair_with_key_and_without_value.properties";
+        Config config = new Config(path);
+        config.load();
+        assertThat(config.value("name7")).isEqualTo("Value7");
+    }
 }
