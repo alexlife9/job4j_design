@@ -1,14 +1,12 @@
 package ru.job4j.io;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Анализ доступности сервера
  *
  * @author Alex_life
- * @version 5.0
+ * @version 6.0
  * @since 30.07.2022
  */
 public class Analysis {
@@ -41,11 +39,12 @@ public class Analysis {
          *   и сразу добавляем получившиеся интервалы в timesLogs
          * 8.проходим по ним форичем и записываем отфильтрованные данные в файл target
          */
-        String startLogs = null;
-        String endLogs = null;
-        boolean statusWork = true;
-        List<String> timesLogs = new ArrayList<>();
+
         try (BufferedReader in = new BufferedReader(new FileReader(source))) {
+            String startLogs = null;
+            String endLogs = null;
+            boolean statusWork = true;
+            PrintWriter timesLogs = new PrintWriter(new BufferedOutputStream(new FileOutputStream(target)));
             for (String line = in.readLine(); line != null; line = in.readLine()) {
                 if ((line.contains("400") || line.contains("500")) && statusWork) {
                     statusWork = false;
@@ -54,18 +53,10 @@ public class Analysis {
                 if ((line.contains("200") || line.contains("300")) && !statusWork) {
                     statusWork = true;
                     endLogs = line.split(" ")[1];
-                    timesLogs.add(startLogs + ";" + endLogs);
+                    timesLogs.println(startLogs + ";" + endLogs);
                 }
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try (PrintWriter out = new PrintWriter(
-                new BufferedOutputStream(
-                        new FileOutputStream(target)))) {
-            timesLogs.forEach(out::println);
         } catch (IOException e) {
             e.printStackTrace();
         }
