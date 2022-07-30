@@ -6,8 +6,9 @@ import java.io.*;
  * Анализ доступности сервера
  *
  * @author Alex_life
- * @version 6.0
- * @since 30.07.2022
+ * @version 7.0
+ * убрал избыточные переменные, сократил код
+ * @since 31.07.2022
  */
 public class Analysis {
 
@@ -21,44 +22,35 @@ public class Analysis {
      */
     public static void unavailable(String source, String target) {
         /**
-         * startLogs - начало записи интервала неработоспособности сервера
-         * endLogs - конец записи интервала неработоспособности сервера
          * statusWork - факт работоспособности сервера: да/нет
          *
-         * 1.создаем начало и конец записи строчки лога
+         * 1.подаем на вход исходный файл и сразу задаем путь куда будем писать итоги программы
          * 2.создаем переменную statusWork для флага работоспособности сервера
-         * 3.создаем список временных интервалов, в который будут писаться интервалы времени
-         * 4.подаем на вход исходный файл
-         * 5.идем циклом по всем входящим срокам и проверяем условия пока линия не null
-         * 6.если линия содержит (400 или 500) И статус сервера true,
+         * 3.идем циклом по всем входящим срокам и проверяем условия пока линия не null
+         * 4.если линия содержит (400 или 500) И статус сервера true,
          *   то меняем статус сервера на false, и
-         *   делим эту линию по пробелу в строке и сохраняем результат второй ячейки в стартовый интервал
-         * 7.если линия содержит (200 или 300) И статус сервера false,
+         *   делим эту линию по пробелу в строке и записываем результат сразу в итоговый файл
+         * 5.если линия содержит (200 или 300) И статус сервера false,
          *   то меняем статус сервера на true, и
-         *   делим эту линию по пробелу в строке и сохраняем результат второй ячейки в конечный интервал
-         *   и сразу добавляем получившиеся интервалы в timesLogs
-         * 8.проходим по ним форичем и записываем отфильтрованные данные в файл target
+         *   делим эту линию по пробелу в строке и записываем результат сразу в итоговый файл
          */
 
-        try (BufferedReader in = new BufferedReader(new FileReader(source))) {
-            String startLogs = null;
-            String endLogs = null;
+        try (BufferedReader in = new BufferedReader(new FileReader(source));
+             PrintWriter timesLogs = new PrintWriter(target)) {
             boolean statusWork = true;
-            PrintWriter timesLogs = new PrintWriter(new BufferedOutputStream(new FileOutputStream(target)));
             for (String line = in.readLine(); line != null; line = in.readLine()) {
                 if ((line.contains("400") || line.contains("500")) && statusWork) {
                     statusWork = false;
-                    startLogs = line.split(" ")[1];
+                    timesLogs.append(line.split(" ")[1]).append(";");
                 }
                 if ((line.contains("200") || line.contains("300")) && !statusWork) {
                     statusWork = true;
-                    endLogs = line.split(" ")[1];
-                    timesLogs.println(startLogs + ";" + endLogs);
+                    timesLogs.append(line.split(" ")[1]).append(System.lineSeparator());
                 }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
+
         }
     }
 
