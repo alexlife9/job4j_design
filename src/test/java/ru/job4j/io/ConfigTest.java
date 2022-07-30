@@ -1,5 +1,6 @@
 package ru.job4j.io;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,65 +17,73 @@ import static org.assertj.core.api.Assertions.assertThat;
  * как ключ "ключ" и значение "значение=1" или "значение=" соответственно.
  *
  * @author Alex_life
- * @version 3.0
- * @since 27.07.2022
+ * @version 4.0
+ * @since 30.07.2022
  */
 
 class ConfigTest {
 
     @Test
     void whenPairWithoutComment() {
-        String path = "./data/pair_without_comment.properties";
+        String path = "./data/pair_without_comment_and_errors.properties";
         Config config = new Config(path);
         config.load();
         assertThat(config.value("name")).isEqualTo("Petr Arsentev");
     }
 
     @Test
-    void whenPairWithPatternViolationAndEmptyLineAndComment() {
-        String path = "./data/pair_with_pattern_violation_and_empty_line_and_comment.properties";
+    void whenPairWithEmptyLine() {
+        String path = "./data/pair_with_empty_line.properties";
         Config config = new Config(path);
         config.load();
         assertThat(config.value("name3")).isEqualTo("Value3");
     }
 
     @Test
-    void whenPairWithCommentAndEmptyLine() {
-        String path = "./data/pair_with_comment_and_empty_line.properties";
+    void whenPairWithComment() {
+        String path = "./data/pair_with_comment.properties";
         Config config = new Config(path);
         config.load();
         assertThat(config.value("name2")).isEqualTo("Value2");
     }
 
+
     @Test
-    void whenPairWithPatternViolation() {
-        String path = "./data/pair_with_pattern_violation.properties";
-        Config config = new Config(path);
-        config.load();
-        assertThat(config.value("name4")).isEqualTo("Value4");
+    void whenPairWithStartLineSignEquals() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            String path = "./data/pair_with_start_line_sign_equals.properties";
+            Config config = new Config(path);
+            config.load();
+        });
     }
 
     @Test
-    void whenPairWithOnlySignEquals() {
-        String path = "./data/pair_with_only_sign_equals.properties";
-        Config config = new Config(path);
-        config.load();
-        assertThat(config.value("name5")).isEqualTo("Value5");
+    void whenOnlySignEquals() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            String path = "./data/pair_with_only_sign_equals.properties";
+            Config config = new Config(path);
+            config.load();
+            assertThat(config.value("name5")).isEqualTo("Value5");
+        });
     }
 
     @Test
     void whenPairWithoutSignEquals() {
-        String path = "./data/pair_without_sign_equals.properties";
-        Config config = new Config(path);
-        config.load();
-        assertThat(config.value("name6")).isEqualTo("Value6");
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            String path = "./data/pair_without_sign_equals.properties";
+            Config config = new Config(path);
+            config.load();
+            assertThat(config.value("name6")).isEqualTo("Value6");
+        });
     }
 
     @Test
-    void whenPairWithKeyAndWithoutValue() {
-        String path = "./data/pair_with_key_and_without_value.properties";
-        Config config = new Config(path);
-        config.load();
-        assertThat(config.value("name7")).isEqualTo("Value7");
+    void whenOnlyKeyWithoutValue() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            String path = "./data/pair_with_key_and_without_value.properties";
+            Config config = new Config(path);
+            config.load();
+            assertThat(config.value("name7")).isEqualTo("Value7");
+        });
     }
 }

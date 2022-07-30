@@ -12,8 +12,8 @@ import java.util.StringJoiner;
  * Читаем файл конфигурации
  *
  * @author Alex_life
- * @version 6.0
- * @since 29.07.2022
+ * @version 7.0
+ * @since 30.07.2022
  */
 public class Config {
 
@@ -44,17 +44,14 @@ public class Config {
      */
     public void load() {
         try (BufferedReader read = new BufferedReader(new FileReader(this.path))) {
-            String line = read.readLine();
-            while (line != null) {
+            for (String line = read.readLine(); line != null; line = read.readLine()) {
                 if ((!line.startsWith("#")) && !line.isEmpty()) {
                     String[] array = line.split("=", 2);
-                    if (array.length != 2 && (array[0].isEmpty() || array[1].isEmpty())) {
+                    if (array.length != 2 || array[0].isEmpty() || array[1].isEmpty()) {
                         throw new IllegalArgumentException(String.format("неполная пара %s", line));
                     }
                     values.put(array[0], array[1]);
-                    System.out.println(values);
                 }
-                line = read.readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
