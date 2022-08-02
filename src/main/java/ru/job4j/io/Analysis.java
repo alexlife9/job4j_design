@@ -50,24 +50,19 @@ public class Analysis {
             }
         } catch (IOException e) {
             e.printStackTrace();
-
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         unavailable("./data/server2.log", "./data/logoutMy2.csv");
         try (PrintWriter out = new PrintWriter(new FileOutputStream("./data/expected2.csv"))) {
             out.println("10:57:01;11:02:02");
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         unavailable("./data/server1.log", "./data/logoutMy1.csv");
         try (PrintWriter out = new PrintWriter(new FileOutputStream("./data/expected1.csv"))) {
             out.println("10:57:01;10:59:01");
             out.println("11:01:02;11:02:02");
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }
