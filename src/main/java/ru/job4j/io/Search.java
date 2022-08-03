@@ -26,15 +26,18 @@ public class Search {
          * результаты поиска складываем в лист
          * и выводим этот лист в консоль
          */
-        String validate = "C:\\projects\\job4j_design\\src";
-        if (validate == null) {
+        String validateStart = args[0];
+        if (validateStart == null) {
             throw new IllegalArgumentException("Стартовая папка не указана");
         }
-        String extensionFile = ".txt";
+        String extensionFile = args[1];
         if (extensionFile == null) {
             throw new IllegalArgumentException("Не указано расширение файла");
         }
-        Path start = Paths.get(validate);
+        if (args.length == 0) {
+            throw new IllegalArgumentException("Аргументы для запуска не найдены");
+        }
+        Path start = Paths.get(validateStart);
         Predicate<Path> predicate = p -> p.toFile().getName().endsWith(extensionFile);
         List<Path> list = search(start, predicate);
         list.forEach(System.out::println);
