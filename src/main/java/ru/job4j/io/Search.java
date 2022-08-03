@@ -14,29 +14,32 @@ import java.util.function.Predicate;
  * выводит содержимое всей директории включая вложенные директории
  *
  * @author Alex_life
- * @version 3.0
+ * @version 4.0
  * добавил Валидацию параметров запуска
  * @since 03.08.2022
  */
 public class Search {
     public static void main(String[] args) throws IOException {
         /**
-         * запускаем обход с указанной папки
-         * назначаем предикат который ищет только файлы имена которых заканчиваются на .js
-         * результаты поиска складываем в лист
-         * и выводим этот лист в консоль
+         * добавил аргументы в конфигурацию запуска класса Search "c:\projects .txt"
          */
-        String validateStart = args[0];
-        if (validateStart == null) {
-            throw new IllegalArgumentException("Стартовая папка не указана");
-        }
-        String extensionFile = args[1];
-        if (extensionFile == null) {
-            throw new IllegalArgumentException("Не указано расширение файла");
-        }
         if (args.length == 0) {
             throw new IllegalArgumentException("Аргументы для запуска не найдены");
         }
+        if (args.length < 2) {
+            throw new IllegalArgumentException("Указаны не все аргументы для запуска данной программы");
+        }
+
+        String validateStart = args[0];
+        String extensionFile = args[1];
+
+        if (validateStart == null) {
+            throw new IllegalArgumentException("Стартовая папка не указана");
+        }
+        if (extensionFile == null) {
+            throw new IllegalArgumentException("Не указано расширение файла");
+        }
+
         Path start = Paths.get(validateStart);
         Predicate<Path> predicate = p -> p.toFile().getName().endsWith(extensionFile);
         List<Path> list = search(start, predicate);
