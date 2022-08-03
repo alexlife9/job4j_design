@@ -14,12 +14,16 @@ import java.io.File;
  * с помощью цикла выводим всё содержимое директории
  *
  * @author Alex_life
- * @version 2.0
- * @since 29.07.2022
+ * @version 3.0
+ * добавил проверку аргументов
+ * @since 03.08.2022
  */
 public class Dir {
     public static void main(String[] args) {
-        File file = new File("c:\\projects");
+        if (args.length == 0) {
+            throw new IllegalArgumentException("Root folder is null. Usage java -jar dir.jar ROOT_FOLDER.");
+        }
+        File file = new File(args[0]);
         if (!file.exists()) {
             throw new IllegalArgumentException(String.format("Not exist %s", file.getAbsoluteFile()));
         }

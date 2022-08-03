@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * Сканирование файловой системы
+ * Валидация параметров запуска
  *
  * Программа Search ищет файлы только по определенному предикату и
  * выводит содержимое всей директории включая вложенные директории
  *
  * @author Alex_life
- * @version 2.0
- * добавил документацию
+ * @version 3.0
+ * добавил Валидацию параметров запуска
  * @since 03.08.2022
  */
 public class Search {
@@ -26,8 +26,16 @@ public class Search {
          * результаты поиска складываем в лист
          * и выводим этот лист в консоль
          */
-        Path start = Paths.get("C:\\projects\\job4j_design\\src");
-        Predicate<Path> predicate = p -> p.toFile().getName().endsWith(".js");
+        String validate = "C:\\projects\\job4j_design\\src";
+        if (validate == null) {
+            throw new IllegalArgumentException("Стартовая папка не указана");
+        }
+        String extensionFile = ".txt";
+        if (extensionFile == null) {
+            throw new IllegalArgumentException("Не указано расширение файла");
+        }
+        Path start = Paths.get(validate);
+        Predicate<Path> predicate = p -> p.toFile().getName().endsWith(extensionFile);
         List<Path> list = search(start, predicate);
         list.forEach(System.out::println);
     }
