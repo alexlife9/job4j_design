@@ -14,30 +14,27 @@ import java.util.function.Predicate;
  * выводит содержимое всей директории включая вложенные директории
  *
  * @author Alex_life
- * @version 4.0
- * добавил Валидацию параметров запуска
- * @since 03.08.2022
+ * @version 5.0
+ * изменил условия проверки переданных аргументов
+ * @since 04.08.2022
  */
 public class Search {
     public static void main(String[] args) throws IOException {
         /**
          * добавил аргументы в конфигурацию запуска класса Search "c:\projects .txt"
          */
-        if (args.length == 0) {
-            throw new IllegalArgumentException("Аргументы для запуска не найдены");
-        }
-        if (args.length < 2) {
+        if (args.length != 2) {
             throw new IllegalArgumentException("Указаны не все аргументы для запуска данной программы");
         }
 
         String validateStart = args[0];
         String extensionFile = args[1];
 
-        if (validateStart == null) {
-            throw new IllegalArgumentException("Стартовая папка не указана");
+        if (!Files.isDirectory(Path.of(validateStart))) {
+            throw new IllegalArgumentException("Стартовая папка содержит неверный путь или не является папкой");
         }
-        if (extensionFile == null) {
-            throw new IllegalArgumentException("Не указано расширение файла");
+        if (!extensionFile.startsWith(".")) {
+            throw new IllegalArgumentException("Не указано расширение файла или расширение не начинается с '.'");
         }
 
         Path start = Paths.get(validateStart);
