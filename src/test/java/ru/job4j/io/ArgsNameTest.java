@@ -24,6 +24,12 @@ class ArgsNameTest {
     }
 
     @Test
+    void whenGetFirstReorder2() {
+        ArgsName jvm = ArgsName.of(new String[] {"-encoding=UTF-8", "-Xmx=512"});
+        assertThat(jvm.get("encoding")).isEqualTo("UTF-8");
+    }
+
+    @Test
     void whenMultipleEqualsSymbol() {
         ArgsName jvm = ArgsName.of(new String[] {"-request=?msg=Exit="});
         assertThat(jvm.get("request")).isEqualTo("?msg=Exit=");
