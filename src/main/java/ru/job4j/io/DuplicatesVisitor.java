@@ -7,7 +7,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
 /**
- * Поиск дубликатов
+ * SimpleFileVisitor для быстрого обхода директории без переопределения всех методов FileVisitor
  *
  * SimpleFileVisitor уже реализует FileVisitor,
  * переопределяя все методы только с указанием на дальнейший обход CONTINUE.
@@ -17,7 +17,7 @@ import java.nio.file.attribute.BasicFileAttributes;
  *
  * @author Alex_life
  * @version 1.0
- * @since 31.07.2022
+ * @since 03.08.2022
  */
 public class DuplicatesVisitor extends SimpleFileVisitor<Path> {
     @Override

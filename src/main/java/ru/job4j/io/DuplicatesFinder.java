@@ -3,9 +3,10 @@ package ru.job4j.io;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
- * Поиск дубликатов
+ * SimpleFileVisitor для быстрого обхода директории без переопределения всех методов FileVisitor
  *
  * SimpleFileVisitor уже реализует FileVisitor,
  * переопределяя все методы только с указанием на дальнейший обход CONTINUE.
@@ -16,10 +17,11 @@ import java.nio.file.Path;
  *
  * @author Alex_life
  * @version 1.0
- * @since 31.07.2022
+ * @since 03.08.2022
  */
 public class DuplicatesFinder {
     public static void main(String[] args) throws IOException {
-        Files.walkFileTree(Path.of("./"), new DuplicatesVisitor());
+        Path startFind = Paths.get("C:\\Projects\\job4j_design\\DirForFindDuplicate");
+        Files.walkFileTree(startFind, new DuplicatesVisitor());
     }
 }
