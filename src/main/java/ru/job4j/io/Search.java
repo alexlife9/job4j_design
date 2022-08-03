@@ -14,11 +14,18 @@ import java.util.function.Predicate;
  * выводит содержимое всей директории включая вложенные директории
  *
  * @author Alex_life
- * @version 1.0
- * @since 29.07.2022
+ * @version 2.0
+ * добавил документацию
+ * @since 03.08.2022
  */
 public class Search {
     public static void main(String[] args) throws IOException {
+        /**
+         * запускаем обход с указанной папки
+         * назначаем предикат который ищет только файлы имена которых заканчиваются на .js
+         * результаты поиска складываем в лист
+         * и выводим этот лист в консоль
+         */
         Path start = Paths.get("C:\\projects\\job4j_design\\src");
         Predicate<Path> predicate = p -> p.toFile().getName().endsWith(".js");
         List<Path> list = search(start, predicate);
@@ -26,6 +33,12 @@ public class Search {
     }
 
     public static List<Path> search(Path root, Predicate<Path> condition) throws IOException {
+        /**
+         * метод search стартует с указанной папки и делает обход директории по заданной логике
+         * создаем новый объект класса SearchFiles, в параметры которого передаем условия condition
+         * запускаем обход дерева с нашими параметрами
+         * возвращаем результат поиска
+         */
         SearchFiles searcher = new SearchFiles(condition);
         Files.walkFileTree(root, searcher);
         return searcher.getPaths();

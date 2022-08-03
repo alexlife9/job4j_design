@@ -10,10 +10,22 @@ import static java.nio.file.FileVisitResult.CONTINUE;
 
 /**
  * Сканирование файловой системы
+ * Метод Files.walkFileTree(Path start, FileVisitor visitor) используется для обхода дерева файлов
+ * Метод принимает в параметры Путь откуда начнется обход и логику обхода
+ * Логика обхода заключается в классе имплементирующем интерфейс FileVisitor
+ * Она содержит 4 метода:
+ * 1.preVisitDirectory - срабатывает ПЕРЕД обращением к элементам папки
+ * 2.visitFile - срабатывает при обращении к файлу
+ * 3.visitFileFailed - срабатывает когда файла по каким-то причинам недоступен
+ * 4.postVisitDirectory - срабатывает ПОСЛЕ обращеня ко всем элементам папки
+ *
+ * Чтобы не переопределять все 4 метода, когда нам допустим нужен только 1 метод, существует класс SimpleFileVisitor,
+ * который имплементирует FileVisitor.
  *
  * @author Alex_life
- * @version 1.0
- * @since 29.07.2022
+ * @version 2.0
+ * добавил документацию
+ * @since 03.08.2022
  */
 public class PrintFiles implements FileVisitor<Path> {
 
