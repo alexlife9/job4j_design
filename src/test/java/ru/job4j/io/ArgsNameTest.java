@@ -31,13 +31,13 @@ class ArgsNameTest {
 
     @Test
     void whenMultipleEqualsSymbol() {
-        ArgsName jvm = ArgsName.of(new String[] {"-request=?msg=Exit="});
+        ArgsName jvm = ArgsName.of(new String[] {"-request=?msg=Exit=", "-Xmx=512"});
         assertThat(jvm.get("request")).isEqualTo("?msg=Exit=");
     }
 
     @Test
     void whenGetNotExist() {
-        ArgsName jvm = ArgsName.of(new String[] {"-Xmx=512"});
+        ArgsName jvm = ArgsName.of(new String[] {"-Xmx=512", "-encoding=UTF-8"});
         assertThatThrownBy(() -> jvm.get("Xms")).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -61,7 +61,7 @@ class ArgsNameTest {
 
     @Test
     void whenMissingDashSign() {
-        ArgsName jvm = ArgsName.of(new String[] {"Xmx=512"});
-        assertThat(jvm.get("Xmx")).isEqualTo("512");
+        assertThatThrownBy(() -> ArgsName.of(new String[] {"Xmx=512"}))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }
