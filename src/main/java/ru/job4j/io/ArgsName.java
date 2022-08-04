@@ -9,7 +9,7 @@ import java.util.Map;
  * Класс ArgsName принимает массив параметров и разбивает их на пары: ключ, значение.
  *
  * @author Alex_life
- * @version 5.0
+ * @version 6.0
  * вынес проверку аргументов в отдельный метод
  * @since 04.08.2022
  */
@@ -37,17 +37,27 @@ public class ArgsName {
      */
     private void parse(String[] args) {
         for (String arguments : args) {
-            String elements = arguments.replaceFirst("-", "");
-            String[] array = elements.split("=", 2);
+            String[] array = arguments.split("=", 2);
             argsCheck(array);
             values.put(array[0], array[1]);
         }
     }
 
     private void argsCheck(String[] argValid) {
-        if (argValid.length != 2 || argValid[0].isEmpty() || argValid[1].isEmpty()) {
-            throw new IllegalArgumentException("Отсутствует ключ или значение");
+        if (!argValid[0].startsWith("-")) {
+            throw new IllegalArgumentException("Неверное значение ключа");
         }
+
+        for (String s : argValid) {
+            if (s.isEmpty()) {
+                throw new IllegalArgumentException("Отсутствует ключ или значение");
+            }
+        }
+
+        if (!argValid[0].startsWith("-=")) {
+            throw new IllegalArgumentException("Отсутствует ключ");
+        }
+
     }
 
     public static ArgsName of(String[] args) {
