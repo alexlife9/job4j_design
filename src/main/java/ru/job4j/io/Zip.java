@@ -11,7 +11,6 @@ import java.util.zip.ZipOutputStream;
  * Архивировать проект
  *
  * Техническое задание.
- *
  * 1. При запуске указывается папка, которую мы хотим архивировать, например: c:\project\job4j\
  * 2. В качестве ключа передаётся расширение файлов, которые не нужно включать в архив.
  * 3. Архив должен сохранять структуру проекта. То есть содержать подпапки.
@@ -29,11 +28,16 @@ import java.util.zip.ZipOutputStream;
  * 7. Для поиска и фильтрации файлов используем класс Search.
  *
  * @author Alex_life
- * @version 3.0
- * @since 04.08.2022
+ * @version 4.0
+ * @since 05.08.2022
  */
 public class Zip {
 
+    /**
+     * метод packFiles принмает на архивацию входящий поток файлов sources и записывает их в указанный файл target
+     * @param sources - задается в методе main и там же всячески обрабатывается
+     * @param target - задается в методе main и там же всячески обрабатывается
+     */
     public void packFiles(List<Path> sources, File target) {
         try (ZipOutputStream zipFiles =
                      new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(String.valueOf(target))))) {
@@ -58,10 +62,20 @@ public class Zip {
         if (!output.getName().endsWith(".zip")) {
             throw new IllegalArgumentException("Указано некорректный тип файла для архивирования");
         }
-
-
     }
 
+    /**
+     * метод main принимает массив аргументов через параметры конфигурации класса при запуске
+     * 1.создаем новый объект
+     * 2.с помощью класса ArgsName проверяем аргументы
+     * 3.задаем переменные трем аргументам для удобства оперирования ими
+     * 4.с помощью метода checkArgs проверяем корректность входящих аргументов
+     * 5.создаем лист файлов, которые ищем при помощи класса Search с методом search через заданный предикат
+     * 6.архивируем найденные файлы в указанный в аргументах конечный файл
+     *
+     * @param args аргументы
+     * @throws IOException эксепшн если не будет найден ввод или вывод
+     */
     public static void main(String[] args) throws IOException {
         Zip zip = new Zip();
         ArgsName argsN = ArgsName.of(args);
