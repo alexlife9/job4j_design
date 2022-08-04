@@ -7,8 +7,8 @@ import static org.assertj.core.api.Assertions.*;
  * Именованные аргументы
  *
  * @author Alex_life
- * @version 1.0
- * @since 03.08.2022
+ * @version 2.0
+ * @since 04.08.2022
  */
 class ArgsNameTest {
     @Test
@@ -31,13 +31,13 @@ class ArgsNameTest {
 
     @Test
     void whenMultipleEqualsSymbol() {
-        ArgsName jvm = ArgsName.of(new String[] {"-request=?msg=Exit=", "-Xmx=512"});
+        ArgsName jvm = ArgsName.of(new String[] {"-request=?msg=Exit="});
         assertThat(jvm.get("request")).isEqualTo("?msg=Exit=");
     }
 
     @Test
     void whenGetNotExist() {
-        ArgsName jvm = ArgsName.of(new String[] {"-Xmx=512", "-encoding=UTF-8"});
+        ArgsName jvm = ArgsName.of(new String[] {"-Xmx=512"});
         assertThatThrownBy(() -> jvm.get("Xms")).isInstanceOf(IllegalArgumentException.class);
     }
 
