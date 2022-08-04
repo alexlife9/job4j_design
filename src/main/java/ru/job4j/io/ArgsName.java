@@ -10,9 +10,9 @@ import java.util.Map;
  * -Xmx=512 -encoding=UTF-8
  *
  * @author Alex_life
- * @version 7.0
- * исправил логику проверки аргументов
- * @since 04.08.2022
+ * @version 8.0
+ * в метод argsCheck добавил проверку присутствия значения
+ * @since 05.08.2022
  */
 public class ArgsName {
 
@@ -55,6 +55,9 @@ public class ArgsName {
         }
         if (!argValid.contains("=")) {
             throw new IllegalArgumentException("Отсутствует аргумент");
+        }
+        if (argValid.indexOf("=") == argValid.length() - 1) {
+            throw new IllegalArgumentException("Отсутствует значение");
         }
 
     }

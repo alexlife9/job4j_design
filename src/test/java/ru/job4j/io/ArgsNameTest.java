@@ -7,8 +7,8 @@ import static org.assertj.core.api.Assertions.*;
  * Именованные аргументы
  *
  * @author Alex_life
- * @version 2.0
- * @since 04.08.2022
+ * @version 3.0
+ * @since 05.08.2022
  */
 class ArgsNameTest {
     @Test
@@ -62,6 +62,12 @@ class ArgsNameTest {
     @Test
     void whenMissingDashSign() {
         assertThatThrownBy(() -> ArgsName.of(new String[] {"Xmx=512"}))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void whenMissingValue() {
+        assertThatThrownBy(() -> ArgsName.of(new String[] {"-Xmx="}))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }
