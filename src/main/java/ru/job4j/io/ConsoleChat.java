@@ -21,7 +21,7 @@ import java.util.Scanner;
  * 2.имя файла, в котором находятся строки с ответами, которые будет использовать бот.
  *
  * @author Alex_life
- * @version 1.0
+ * @version .0
  * @since 05.08.2022
  */
 public class ConsoleChat {
@@ -30,7 +30,7 @@ public class ConsoleChat {
     private static final String CONTINUE = "еще";
     private final String path;
     private final String botAnswers;
-    List<String> logList = new ArrayList<>();
+    private final List<String> logList = new ArrayList<>();
 
     public ConsoleChat(String path, String botAnswers) {
         this.path = path;
@@ -49,23 +49,23 @@ public class ConsoleChat {
         String userText = input.nextLine();
         List<String> answersPhrases = readPhrases();
         String answerBot;
-        while (!userText.equals(OUT)) {
-            System.out.println("Введите слово: ");
-            if (!userText.equals(STOP) || !userText.equals(CONTINUE)) {
+        while (!OUT.equals(userText)) {
+            if (!STOP.equals(userText)) {
+                System.out.println("Введите слово: ");
                 userText = input.nextLine();
-                logList.add(userText);
+                logList.add("юзер : " + userText);
                 answerBot = answersPhrases.get((int) (Math.random() * answersPhrases.size()));
                 System.out.println(answerBot);
-                logList.add(answerBot);
+                logList.add("бот : " + answerBot);
             }
-            if (userText.equals(CONTINUE)) {
+            if (STOP.equals(userText)) {
+                System.out.println("для продолжения введите ЕЩЕ");
                 userText = input.nextLine();
-                logList.add(userText);
-                answerBot = answersPhrases.get((int) (Math.random() * answersPhrases.size()));
-                System.out.println(answerBot);
-                logList.add(answerBot);
+                while (!CONTINUE.equals(userText)) {
+                    System.out.println("для продолжения введите ЕЩЕ");
+                    userText = input.nextLine();
+                }
             }
-
         }
         saveLog(logList);
     }
