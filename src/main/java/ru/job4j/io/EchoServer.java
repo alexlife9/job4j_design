@@ -3,6 +3,8 @@ package ru.job4j.io;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+
 /**
  * Что такое Socket
  *
@@ -21,7 +23,7 @@ import java.net.Socket;
  *  После чтения отправляем ответ окончательно.
  *
  * @author Alex_life
- * @version 1.0
+ * @version 2.0
  * @since 06.08.2022
  */
 public class EchoServer {
@@ -35,8 +37,14 @@ public class EchoServer {
                     out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
                     for (String str = in.readLine(); str != null && !str.isEmpty(); str = in.readLine()) {
                         System.out.println(str);
-                        if (str.contains("Bye")) {
+                        if (str.contains("Hello")) {
+                            out.write("Hello".getBytes(StandardCharsets.UTF_8));
+                            break;
+                        } else if (str.contains("Exit")) {
                             server.close();
+                        } else if (!str.contains("Hello") || !str.contains("Exit")) {
+                            out.write("What".getBytes(StandardCharsets.UTF_8));
+                            break;
                         }
                     }
                     out.flush();
