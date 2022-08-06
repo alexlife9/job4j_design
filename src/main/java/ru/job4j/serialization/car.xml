@@ -1,0 +1,11 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+<car refueled="true" releaseYear="2000" color="black">
+    <driver name="Alex" age="40"/>
+    <trunkes>
+        <trunk>Suitcase</trunk>
+        <trunk>Painting</trunk>
+        <trunk>Basket</trunk>
+        <trunk>Cardboard</trunk>
+        <trunk>smallDog</trunk>
+    </trunkes>
+</car>
