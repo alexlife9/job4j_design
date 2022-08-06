@@ -21,8 +21,8 @@ import java.util.Scanner;
  * 2.имя файла, в котором находятся строки с ответами, которые будет использовать бот.
  *
  * @author Alex_life
- * @version .0
- * @since 05.08.2022
+ * @version 3.0
+ * @since 06.08.2022
  */
 public class ConsoleChat {
     private static final String OUT = "выход";
@@ -40,31 +40,39 @@ public class ConsoleChat {
     /**
      * Метод run() содержит логику чата
      *
-     * пока юзер на ввел в консоль "выход", означающее завершение программы
-     *
-     * сохраняем в logList текущую строку
+     * 1.создаем лист ответов answersPhrases который прочитали из входящего файла
+     * 2.делаем переменную - "ответ бота"
+     * 3.приглашаем юзера ввести слово
+     *   и открываем ему консоль на ввод
+     * 4.пока юзер на ввел в консоль "выход", означающее завершение программы, мы проверяем условия:
+     *  --если слово СТОП, то пока юзер не ввел ЕЩЕ, ждем его правильный ввод
+     *  при этом все фразы юзера записываем в файл
+     *  --иначе (если слова другие), то выдем рандомный ответ бота прочитанный из листа ответов
+     *  заносим ответ бота в лог
+     *  приглашаем юзера снова говаорить
+     *  заносим фразу юзера в лог
+     * 5.если юзер введет слово ВЫХОД, то программа завершится и лог сохраняется в файл.
      */
     public void run() {
-        Scanner input = new Scanner(System.in);
-        String userText = input.nextLine();
         List<String> answersPhrases = readPhrases();
         String answerBot;
+        System.out.println("Введите слово: ");
+        Scanner input = new Scanner(System.in);
+        String userText = input.nextLine();
         while (!OUT.equals(userText)) {
-            if (!STOP.equals(userText)) {
-                System.out.println("Введите слово: ");
-                userText = input.nextLine();
-                logList.add("юзер : " + userText);
-                answerBot = answersPhrases.get((int) (Math.random() * answersPhrases.size()));
-                System.out.println(answerBot);
-                logList.add("бот : " + answerBot);
-            }
             if (STOP.equals(userText)) {
-                System.out.println("для продолжения введите ЕЩЕ");
-                userText = input.nextLine();
                 while (!CONTINUE.equals(userText)) {
                     System.out.println("для продолжения введите ЕЩЕ");
                     userText = input.nextLine();
                 }
+                logList.add("юзер : " + userText);
+            } else {
+                answerBot = answersPhrases.get((int) (Math.random() * answersPhrases.size()));
+                logList.add("бот : " + answerBot);
+                System.out.println(answerBot);
+                System.out.println("Введите слово: ");
+                userText = input.nextLine();
+                logList.add("юзер : " + userText);
             }
         }
         saveLog(logList);
