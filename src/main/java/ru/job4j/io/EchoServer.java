@@ -26,12 +26,11 @@ import java.nio.charset.StandardCharsets;
  *  После чтения отправляем ответ окончательно.
  *
  * @author Alex_life
- * @version 3.0
- * добавил логирование в файл
+ * @version 4.0
  * @since 06.08.2022
  */
 public class EchoServer {
-    private static final Logger LOG = LoggerFactory.getLogger(UsageLog4j.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(EchoServer.class.getName());
 
     public static void main(String[] args) {
         try (ServerSocket server = new ServerSocket(9000)) {
