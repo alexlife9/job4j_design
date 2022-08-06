@@ -16,8 +16,8 @@ import java.util.List;
  *
  *
  * @author Alex_life
- * @version 1.0
- * @since 05.08.2022
+ * @version 2.0
+ * @since 06.08.2022
  */
 public class CSVReader {
 
