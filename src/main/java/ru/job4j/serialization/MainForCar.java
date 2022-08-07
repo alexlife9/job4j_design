@@ -38,6 +38,5 @@ public class MainForCar {
             Car result = (Car) unmarshaller.unmarshal(reader);
             System.out.println(result);
         }
-
     }
 }

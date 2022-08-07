@@ -5,7 +5,9 @@ import com.google.gson.GsonBuilder;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
@@ -18,15 +20,17 @@ import java.util.Arrays;
 @XmlRootElement(name = "car")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Car {
-    boolean refueled;
+    @XmlAttribute
+    private boolean refueled;
 
-    int releaseYear;
+    @XmlAttribute
+    private int releaseYear;
 
-    String color;
+    private String color;
 
-    String[] trunk;
+    private String[] trunk;
 
-    Driver driver;
+    private Driver driver;
 
     public Car() {
     }
@@ -46,6 +50,7 @@ public class Car {
                 + ", releaseYear=" + releaseYear
                 + ", color='" + color + '\''
                 + ", trunk=" + Arrays.toString(trunk)
+                + ", driver=" + driver
                 + '}';
     }
 
@@ -60,14 +65,14 @@ public class Car {
         final String carJson = gson.toJson(car);
         final Car carMod = gson.fromJson(carJson, Car.class);
         System.out.println(carMod);
-
-
     }
 }
 
 @XmlRootElement(name = "driver")
-class Driver {
+class Driver implements Serializable {
+    @XmlAttribute
     String name;
+    @XmlAttribute
     int age;
 
     public Driver() {
@@ -76,5 +81,13 @@ class Driver {
     public Driver(String name, int age) {
         this.name = name;
         this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Driver{"
+                + "name='" + name + '\''
+                + ", age=" + age
+                + '}';
     }
 }
