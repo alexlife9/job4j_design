@@ -1,5 +1,6 @@
 package ru.job4j.serialization;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.*;
 
 /**
@@ -29,6 +30,7 @@ import java.io.*;
  * @version 1.0
  * @since 06.08.2022
  */
+@XmlRootElement(name = "contact")
 public class Contact implements Serializable {
     /**
      * Поле serialVersionUID - уникальный идентификатор версии сериализованного класса,
@@ -39,8 +41,11 @@ public class Contact implements Serializable {
      * в реальной разработке лучше использовать штатный механизм Java генерации serialVersionUID или разработать свой.
      */
     private static final long serialVersionUID = 1L;
-    private final int zipCode;
-    private final String phone;
+    private int zipCode;
+    private String phone;
+
+    public Contact() {
+    }
 
     public Contact(int zipCode, String phone) {
         this.zipCode = zipCode;

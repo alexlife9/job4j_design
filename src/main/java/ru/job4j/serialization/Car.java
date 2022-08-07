@@ -3,6 +3,9 @@ package ru.job4j.serialization;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Arrays;
 
 /**
@@ -12,6 +15,8 @@ import java.util.Arrays;
  * @version 1.0
  * @since 06.08.2022
  */
+@XmlRootElement(name = "car")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Car {
     boolean refueled;
 
@@ -22,6 +27,9 @@ public class Car {
     String[] trunk;
 
     Driver driver;
+
+    public Car() {
+    }
 
     public Car(boolean refueled, int releaseYear, String color, String[] trunk, Driver driver) {
         this.refueled = refueled;
@@ -57,9 +65,13 @@ public class Car {
     }
 }
 
+@XmlRootElement(name = "driver")
 class Driver {
     String name;
     int age;
+
+    public Driver() {
+    }
 
     public Driver(String name, int age) {
         this.name = name;

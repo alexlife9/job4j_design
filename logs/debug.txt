@@ -1,0 +1,1 @@
+2022-08-07 02:42:26,035 DEBUG ru.job4j.io.UsageLog4j:main:33 - User info name : Petr Arsentev, age : 33, b : 8, sh : 16, l : 999, f : 888.0, d : 55.9, bool : true, ch : *
