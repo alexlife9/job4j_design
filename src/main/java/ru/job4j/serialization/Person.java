@@ -1,11 +1,16 @@
 package ru.job4j.serialization;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.*;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * JAXB. Преобразование XML в POJO
@@ -44,6 +49,22 @@ public class Person {
     @XmlElement(name = "what")
     private String[] statuses;
 
+    public boolean isSex() {
+        return sex;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public Contact getContact() {
+        return contact;
+    }
+
+    public String[] getStatuses() {
+        return statuses;
+    }
+
     public Person() {
     }
 
@@ -81,6 +102,31 @@ public class Person {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+        /* JSONObject из json-строки строки */
+        JSONObject jsonContact = new JSONObject("{\"phone\":\"+7(924)111-111-11-11\"}");
+
+        /* JSONArray из ArrayList */
+        List<String> list = new ArrayList<>();
+        list.add("Student");
+        list.add("Free");
+        JSONArray jsonStatuses = new JSONArray(list);
+
+        /* JSONObject напрямую методом put */
+        final Person person2 = new Person(false, 30,
+                new Contact(123456, "+7 (111) 111-11-11"), "Worker", "Married");
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("sex", person2.isSex());
+        jsonObject.put("age", person2.getAge());
+        jsonObject.put("contact", jsonContact);
+        jsonObject.put("statuses", jsonStatuses);
+
+        /* Выведем результат в консоль */
+        System.out.println(jsonObject.toString());
+
+        /* Преобразуем объект person в json-строку */
+        System.out.println(new JSONObject(person2).toString());
     }
 }
 
