@@ -1,4 +1,4 @@
-create table roles(					--роли
+create table role(					--роли
 	id serial primary key,
 	name varchar(255)
 );
@@ -6,17 +6,23 @@ create table roles(					--роли
 create table users( 				--пользователи
 	id serial primary key,
 	name varchar(255),
-	role_id int references roles(id) --связь many-to-one -> много ролей может иметь один юзер
+	role_id int references role(id) --связь many-to-one -> много ролей может иметь один юзер
 );
 
-create table role_rights( 			--права(условия) ролей
+create table rules( 			--права(условия) ролей
 	id serial primary key,
-	role_id int references roles(id) --связь many-to-many -> роли имеют много условий И условия имеют много ролей
+	name varchar(255)
+);
+
+create table role_rules(      --вспомогательная таблица для связи по схеме many-to-many
+	id serial primary key,
+	role_id int references role(id), --связь many-to-many -> роли имеют много условий
+	rules_id int references rules(id)            --И условия имеют много ролей
 );
 
 create table status( 			   	--Состояние заявки
 	id serial primary key,
-	complete boolean
+	name varchar(255)
 );
 
 create table category_item(			 --категория заявки
@@ -28,7 +34,7 @@ create table item( 				--заявка
 	id serial primary key,
 	name text,
 	users_id int references users(id),       --связь many-to-one -> много юзеров могут работать с этой заявкой
-	category_id int references category_item(id), --связь many-to-one -> эту заявку можно соотнести к разным категориям
+	category_item_id int references category_item(id), --связь many-to-one -> эту заявку можно соотнести к разным категориям
 	status_id int references status(id)        --связь many-to-one -> этой заявке можно присвоить много статусов
 );
 
