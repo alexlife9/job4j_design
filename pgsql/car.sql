@@ -6,7 +6,7 @@ create table truck(
     year int
 );
 
-insert into track(model, color, price, year) values(MAN, black, 500.8, 2020);
+insert into truck(model, color, price, year) values('MAN', 'black', 500.8, 2020);
 
 update truck set year = '2007';
 
