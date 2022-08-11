@@ -10,4 +10,4 @@ insert into truck(model, color, price, year) values('MAN', 'black', 500.8, 2020)
 
 update truck set year = '2007';
 
-delete from truck;
+delete from truck; 
