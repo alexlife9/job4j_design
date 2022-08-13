@@ -24,7 +24,7 @@ insert into product(name, type_id, expired_date, price) values('сметана',
 insert into product(name, type_id, expired_date, price) values('курятина', 3, '2022-08-15', 750.50);
 insert into product(name, type_id, expired_date, price) values('говядина', 3, '2022-08-21', 950.50);
 insert into product(name, type_id, expired_date, price) values('свинина', 3, '2022-08-25', 450.50);
-
+*/
 
 /*вывести общую таблицу со всеми столбиками полностью заполненную заданными значениями */
 select *
@@ -58,11 +58,11 @@ from type AS t
 join product AS p ON p.type_id = t.id
 group by t.name_type;
 
-/*6. Написать запрос получение всех продуктов с типом "сыр" и "молоко". */
+/*6. Написать запрос получение всех продуктов с типом "сыр" и "молочка". */
 select t.name_type, p.name
 from type AS t
 join product AS p ON p.type_id = t.id
-where t.name_type IN ('сыр', 'молоко');
+where t.name_type IN ('сыр', 'молочка');
 
 /*7. Написать запрос, который выводит тип продуктов, которых осталось меньше 10 штук. 
 Под количеством подразумевается количество продуктов определенного типа. 
