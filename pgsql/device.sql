@@ -35,4 +35,11 @@ join devices AS d ON d.id = dp.device_id --а также присоединяе�
 group by p.name  --делаем группировку по имени человека, потому что в начале запроса мы выбрали именно этот столбец - select p.name
 
 /*Дополнить запрос выше условием, что средняя стоимость устройств должна быть больше 60.*/
+select p.name, avg(d.price)
+from people AS p
+join devices_people AS dp ON p.id = dp.people_id
+join devices AS d ON d.id = dp.device_id
+group by p.name
 having avg(d.price) > 60;
+
+
