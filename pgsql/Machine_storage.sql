@@ -45,7 +45,7 @@ select c.name AS марка, cb.name AS кузов, ce.name AS движок, ct.
 from cars AS c
 left join car_bodies AS cb ON c.body_id = cb.id
 left join car_engines AS ce ON c.engine_id = ce.id
-left join car_transmissions AS ct ON c.transmission_id = ct.id
+left join car_transmissions AS ct ON c.transmission_id = ct.id;
 
 /*2. Вывести кузовы, которые не используются НИ в одной машине. 
 "Не используются" значит, что среди записей таблицы cars отсутствует внешние ключи, ссылающие на таблицу car_bodies. 
@@ -54,17 +54,17 @@ left join car_transmissions AS ct ON c.transmission_id = ct.id
 Запрос, касающийся этого пункта, должен вывести "пикап", т.к. среди машин нет тех, что обладают таким кузовом */
 select cb.name AS кузов                  --выбираем колонку кузов
 from car_bodies AS cb                    --в таблице кузовов 
-full join cars AS c ON c.body_id = cb.id --присоединяем к ней ВСЮ таблицу тачек и проверяем условие присоединения
-where c.id is null                       --выводим только те строки из полной таблицы тачек ГДЕ поле Кузовов пустое.
+left join cars AS c ON c.body_id = cb.id --присоединяем к ней таблицу тачек и проверяем условие присоединения
+where c.id is null;                       --выводим только те строки из полной таблицы тачек ГДЕ поле Кузовов пустое.
 
 /*3. Вывести двигатели, которые не используются НИ в одной машине, аналогично п.2 */
 select ce.name AS движок                  
 from car_engines AS ce                     
-full join cars AS c ON c.engine_id = ce.id
-where c.id is null   
+left join cars AS c ON c.engine_id = ce.id
+where c.id is null;
 
 /*4. Вывести коробки передач, которые не используются НИ в одной машине */
 select ct.name AS движок                  
 from car_transmissions AS ct                     
-full join cars AS c ON c.transmission_id = ct.id
-where c.id is null  
+left join cars AS c ON c.transmission_id = ct.id
+where c.id is null;
