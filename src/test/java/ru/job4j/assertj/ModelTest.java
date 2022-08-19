@@ -46,8 +46,7 @@ class ModelTest {
                 .startsWith("I am")
                 .startsWithIgnoringCase("i")
                 .endsWith("Java")
-                .isEqualTo("I am learning Java")
-        ;
+                .isEqualTo("I am learning Java");
     }
 
     /**
@@ -62,8 +61,7 @@ class ModelTest {
                 .isEven()
                 .isGreaterThan(1)
                 .isLessThan(3)
-                .isEqualTo(2)
-        ;
+                .isEqualTo(2);
     }
 
     /**
@@ -80,7 +78,6 @@ class ModelTest {
                 .isCloseTo(5.25d, withPrecision(0.01d))
                 .isCloseTo(5.25d, Percentage.withPercentage(1.0d))
                 .isGreaterThan(5.25d)
-                .isLessThan(5.26d)
-        ;
+                .isLessThan(5.26d);
     }
 }

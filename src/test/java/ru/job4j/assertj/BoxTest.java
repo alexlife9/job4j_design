@@ -91,8 +91,7 @@ class BoxTest {
                 .isEqualTo(864)
                 .isNotNegative()
                 .isGreaterThan(800)
-                .isLessThan(900)
-        ;
+                .isLessThan(900);
     }
 
     @Test
