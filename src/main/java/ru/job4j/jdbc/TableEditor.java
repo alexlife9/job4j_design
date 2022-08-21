@@ -1,6 +1,5 @@
 package ru.job4j.jdbc;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,7 +16,7 @@ import java.util.StringJoiner;
  * executeQuery для SELECT-операций
  *
  * @author Alex_life
- * @version 2.0
+ * @version 3.0
  * @since 21.08.2022
  */
 public class TableEditor implements AutoCloseable {
@@ -45,8 +44,7 @@ public class TableEditor implements AutoCloseable {
      * метод для считывания настроек из указанного файла в properties
      */
     private void initConnection() throws ClassNotFoundException {
-        Class.forName("org.postgresql.Driver");
-        Class.forName(properties.getProperty("statement.properties"));
+        Class.forName(properties.getProperty("driver"));
         try {
             connection = DriverManager.getConnection(
                     properties.getProperty("url"),
@@ -176,12 +174,27 @@ public class TableEditor implements AutoCloseable {
         try (InputStream in = TableEditor.class.getClassLoader()
                 .getResourceAsStream("statement.properties")) {
             properties.load(in);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
         try (TableEditor tableEditor = new TableEditor(properties)) {
-            tableEditor.createTable("create_test_table");
-            System.out.println(tableEditor.getTableScheme("create_test"));
+            tableEditor.createTable("test_table");
+            System.out.println(tableEditor.getTableScheme("test_table"));
+
+            tableEditor.addColumn("test_table", "name1_column", "text");
+            System.out.println(tableEditor.getTableScheme("test_table"));
+
+            tableEditor.addColumn("test_table", "name5_column", "text");
+            System.out.println(tableEditor.getTableScheme("test_table"));
+
+            tableEditor.dropColumn("test_table", "name5_column");
+            System.out.println(tableEditor.getTableScheme("test_table"));
+
+            tableEditor.renameColumn("test_table", "name1_column", "name10_column");
+            System.out.println(tableEditor.getTableScheme("test_table"));
+
+            tableEditor.dropTable("test_table");
+            System.out.println("test_table is DELETE");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
