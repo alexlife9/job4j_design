@@ -1,7 +1,5 @@
 package ru.job4j.jdbc;
 
-import ru.job4j.io.Config;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -14,29 +12,46 @@ import java.util.StringJoiner;
 /**
  * Statement
  *
+ * С помощью метода execute принято выполнять DDL операции, в основном для опредения схемы БД - CREATE, DROP
+ * Для выполнения DML операций чаще используется executeUpdate для INSERT и DELETE-операций, а также
+ * executeQuery для SELECT-операций
+ *
  * @author Alex_life
- * @version 1.0
- * @since 19.08.2022
+ * @version 2.0
+ * @since 21.08.2022
  */
 public class TableEditor implements AutoCloseable {
 
+    /**
+     * подключение к БД
+     */
     private Connection connection;
 
+    /**
+     * настройки подключения к БД
+     */
     private final Properties properties;
 
-    public TableEditor(Properties properties) {
+    /**
+     * в конструктор передаем properties - файл с уже загруженными настройками из метода initConnection()
+     * @param properties файл с настройками
+     */
+    public TableEditor(Properties properties) throws ClassNotFoundException {
         this.properties = properties;
         initConnection();
     }
 
-    private void initConnection() {
-        Config config = new Config("C:\\Projects\\job4j_design\\src\\main\\resources\\statement.properties");
-        config.load();
+    /**
+     * метод для считывания настроек из указанного файла в properties
+     */
+    private void initConnection() throws ClassNotFoundException {
+        Class.forName("org.postgresql.Driver");
+        Class.forName(properties.getProperty("statement.properties"));
         try {
             connection = DriverManager.getConnection(
-                    config.value("url"),
-                    config.value("login"),
-                    config.value("password")
+                    properties.getProperty("url"),
+                    properties.getProperty("login"),
+                    properties.getProperty("password")
             );
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -44,92 +59,93 @@ public class TableEditor implements AutoCloseable {
     }
 
     /**
-     * createTable() – создает пустую таблицу без столбцов с указанным именем
-     * @param tableName
+     * метод executeStatement осуществляет одинаковые начала операций с БД
+     * 1. подключаемся к БД и передаем управление в Statement
+     * 2. метод execute осуществляет операции с БД из указанного в параметрах запроса
+     * @param sql в параметры передаем любой SQL-запрос на обработку
      */
-    public void createTable(String tableName) {
+    private void executeStatement(String sql) {
         try (Statement statement = connection.createStatement()) {
-            String sql = String.format(
-                    "create table if not exists %s();",
-                    tableName
-            );
             statement.execute(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * createTable() – создает пустую таблицу без столбцов с указанным именем
+     * @param tableName имя таблицы
+     */
+    public void createTable(String tableName) {
+        String sqlCreate = String.format(
+            "create table if not exists %s();",
+            tableName
+        );
+        executeStatement(sqlCreate);
     }
 
     /**
      * dropTable() – удаляет таблицу по указанному имени
-     * @param tableName
+     *
+     * @param tableName имя таблицы
      */
     public void dropTable(String tableName) {
-        try (Statement statement = connection.createStatement()) {
-            String sql = String.format(
-                    "drop table %s;",
-                    tableName
-            );
-            statement.execute(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        String sqlDrop = String.format(
+            "drop table %s;",
+            tableName
+        );
+        executeStatement(sqlDrop);
     }
 
     /**
      * addColumn() – добавляет столбец в таблицу
-     * @param tableName
-     * @param columnName
-     * @param type
+     * с помощью alter table можно вносить изменения в уже существующую таблицу
+     * @param tableName имя таблицы
+     * @param columnName имя столбца
+     * @param type тип столбца
      */
     public void addColumn(String tableName, String columnName, String type) {
-        try (Statement statement = connection.createStatement()) {
-            String sql = String.format(
-                    "alter table %s add column %s %s;",
-                    tableName, columnName, type
-            );
-            statement.execute(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        String sqlAddCol = String.format(
+                "alter table %s add column %s %s;",
+                tableName, columnName, type
+        );
+        executeStatement(sqlAddCol);
     }
 
     /**
      * dropColumn() – удаляет столбец из таблицы
-     * @param tableName
-     * @param columnName
+     *
+     * @param tableName имя таблицы
+     * @param columnName имя столбца
      */
     public void dropColumn(String tableName, String columnName) {
-        try (Statement statement = connection.createStatement()) {
-            String sql = String.format(
-                    "alter table %s drop column %s;",
-                    tableName, columnName
-            );
-            statement.execute(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        String sqlDropCol = String.format(
+            "alter table %s drop column %s;",
+            tableName, columnName
+        );
+        executeStatement(sqlDropCol);
     }
 
     /**
      * renameColumn() – переименовывает столбец
-     * @param tableName
-     * @param columnName
-     * @param newColumnName
+     * @param tableName имя таблицы
+     * @param columnName имя столбца
+     * @param newColumnName новое имя столбца
      */
     public void renameColumn(String tableName, String columnName, String newColumnName) {
-        try (Statement statement = connection.createStatement()) {
-            String sql = String.format(
-                    "alter table %s rename column %s to %s;",
-                    tableName, columnName, newColumnName
-            );
-            statement.execute(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        String sqlRenCol = String.format(
+                "alter table %s rename column %s to %s;",
+                tableName, columnName, newColumnName
+        );
+        executeStatement(sqlRenCol);
     }
 
-
-    public static String getTableScheme(Connection connection, String tableName) throws Exception {
+    /**
+     * метод getTableScheme отображает в консоли результат SQL-запроса
+     * @param tableName имя таблицы
+     * @return отображение готового запроса в консоли
+     */
+    public String getTableScheme(String tableName) throws Exception {
         var rowSeparator = "-".repeat(30).concat(System.lineSeparator());
         var header = String.format("%-15s|%-15s%n", "NAME", "TYPE");
         var buffer = new StringJoiner(rowSeparator, rowSeparator, rowSeparator);
@@ -158,14 +174,14 @@ public class TableEditor implements AutoCloseable {
     public static void main(String[] args) throws Exception {
         Properties properties = new Properties();
         try (InputStream in = TableEditor.class.getClassLoader()
-                .getResourceAsStream("C:\\Projects\\job4j_design\\src\\main\\resources\\statement.properties")) {
+                .getResourceAsStream("statement.properties")) {
             properties.load(in);
         } catch (IOException e) {
             e.printStackTrace();
         }
         try (TableEditor tableEditor = new TableEditor(properties)) {
-            tableEditor.createTable("create_test");
-            System.out.println(getTableScheme(tableEditor.connection, "create_test"));
+            tableEditor.createTable("create_test_table");
+            System.out.println(tableEditor.getTableScheme("create_test"));
         } catch (Exception e) {
             e.printStackTrace();
         }
