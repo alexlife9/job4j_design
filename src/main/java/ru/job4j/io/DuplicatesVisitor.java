@@ -40,6 +40,7 @@ public class DuplicatesVisitor extends SimpleFileVisitor<Path> {
      * @return возвращаем результат работы метода - то есть все найденные дубликаты
      * @throws IOException выбрасываем эксепшн если файл не найден
      */
+
     @Override
     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
         FileProperty fileProperty = new FileProperty(file.toFile().length(), file.getFileName().toString());

@@ -15,7 +15,6 @@ import java.util.Scanner;
  *
  * Класс CSVReader читает данные из CSV файла и вывести их после фильтра в обработанном виде в другой файл
  *
- *
  * @author Alex_life
  * @version 3.0
  * @since 09.08.2022
@@ -57,16 +56,18 @@ public class CSVReader {
      * после того как прочитали файл и разбили его на токены, применяем фильтр и вычленяем необходимые нам данные
      * метод headLine формирует шапку файла исходя из заданного фильтра, переданного в аргументах
      */
-//    public static List<Integer> headLine(ArgsName argsName, String column) {
-//        int[] table; /*массив в который будем записывать отфильтрованные данные под порядковыми номерами*/
-//        List<String> firstLine = Arrays.asList(argsName.get("filter").split(","));
-//        while (afterFilter != null) {
-//            if (firstLine.contains("out")) {
-//
-//            }
-//        }
-//
-//    }
+    /*
+    public static List<Integer> headLine(ArgsName argsName, String column) {
+        int[] table; /*массив в который будем записывать отфильтрованные данные под порядковыми номерами
+        List<String> firstLine = Arrays.asList(argsName.get("filter").split(","));
+        while (afterFilter != null) {
+            if (firstLine.contains("out")) {
+
+            }
+        }
+
+    }
+    */
 
     /**
      * метод outputData выбирает куда выводить отфильтрованные данные - в консоль или в файл
