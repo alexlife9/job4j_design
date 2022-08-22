@@ -13,8 +13,8 @@ import java.util.Properties;
  * PreparedStatement
  *
  * @author Alex_life
- * @version 1.0
- * @since 22.08.2022
+ * @version 2.0
+ * @since 23.08.2022
  */
 public class ImportDB implements AutoCloseable {
 
@@ -31,11 +31,11 @@ public class ImportDB implements AutoCloseable {
     }
 
     public void initConnection() throws Exception {
-        Class.forName(cfg.getProperty("driver"));
+        Class.forName(cfg.getProperty("jdbc.driver"));
         connection = DriverManager.getConnection(
-                cfg.getProperty("url"),
-                cfg.getProperty("login"),
-                cfg.getProperty("password")
+                cfg.getProperty("jdbc.url"),
+                cfg.getProperty("jdbc.username"),
+                cfg.getProperty("jdbc.password")
         );
     }
 
@@ -44,7 +44,7 @@ public class ImportDB implements AutoCloseable {
         try (BufferedReader reader = new BufferedReader(new FileReader(dump))) {
             reader.lines().forEach(line -> {
                 String[] array = line.split(";", 2);
-                if (array[0].isEmpty() || array[1].isEmpty()) {
+                if (array.length == 2 && (array[0].isEmpty() || array[1].isEmpty())) {
                     throw new IllegalArgumentException("name or email not found");
                 }
                 users.add(new User(array[0], array[1]));
@@ -63,7 +63,8 @@ public class ImportDB implements AutoCloseable {
                 cfg.getProperty("jdbc.password")
         )) {
             for (User user : users) {
-                try (PreparedStatement ps = cnt.prepareStatement("insert into users ...")) {
+                try (PreparedStatement ps = cnt.prepareStatement(
+                        "insert into users(name, email) values(?, ?)")) {
                     ps.setString(1, user.name);
                     ps.setString(2, user.email);
                     ps.execute();
