@@ -13,7 +13,7 @@ import java.util.Properties;
  * PreparedStatement
  *
  * @author Alex_life
- * @version 2.0
+ * @version 3.0
  * @since 23.08.2022
  */
 public class ImportDB implements AutoCloseable {
@@ -44,7 +44,7 @@ public class ImportDB implements AutoCloseable {
         try (BufferedReader reader = new BufferedReader(new FileReader(dump))) {
             reader.lines().forEach(line -> {
                 String[] array = line.split(";", 2);
-                if (array.length == 2 && (array[0].isEmpty() || array[1].isEmpty())) {
+                if (array.length != 2 || array[0].isEmpty() || array[1].isEmpty()) {
                     throw new IllegalArgumentException("name or email not found");
                 }
                 users.add(new User(array[0], array[1]));
