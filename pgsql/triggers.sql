@@ -170,8 +170,7 @@ create or replace function check_tax() --функция
 $$
     BEGIN
         update products
-        set price = price - price * 0.5
-        where id = new.id;
+        NEW.price = NEW.price * 1.5 --оператор NEW для изменения цены до вставки
         return NEW;
     END;
 $$
