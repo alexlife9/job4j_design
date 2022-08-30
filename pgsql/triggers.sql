@@ -169,8 +169,7 @@ create or replace function check_tax() --функция
     returns trigger as
 $$
     BEGIN
-        update products
-        NEW.price = NEW.price * 1.5 --оператор NEW для изменения цены до вставки
+        NEW.price = NEW.price * 1.5; --оператор NEW для изменения цены до вставки
         return NEW;
     END;
 $$
