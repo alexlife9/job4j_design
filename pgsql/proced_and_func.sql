@@ -138,7 +138,7 @@ select f_update_data(200, 1, 5); --для закрепления инфы еще
 --1   108  1200
 --5   280   600
 
---5.создаем хранимую функцию удаления данных. 
+--6.создаем хранимую функцию удаления данных. 
 create or replace function f_delete_data(d_name varchar, d_count int) --удаляем по имени и кол-ву
 returns void
 language 'plpgsql'
@@ -166,7 +166,42 @@ select f_delete_data('product_3', 75); -- удаляем product_3, которо
 --4   60   4800
 --1   108  1200
 --5   280   600
---3   80   7000  ??? этой записи тоже нет!!  Почему? Ведь условие <75. А тут 80!
+
+create or replace function f_delete_data(d_name varchar, d_count int) --удаляем по имени и кол-ву
+returns void
+language 'plpgsql'
+as $$
+    BEGIN
+        delete from products 
+		where name like d_name AND d_count < 70;
+    END;
+$$;
+
+select f_insert_data('product_4', 'producer_5', 40, 5000); --добавим запись с одинаковым именем продукта
+select f_insert_data('product_4', 'producer_5', 80, 7000); --добавим запись с одинаковым именем продукта
+-- итого сейчас в таблице вот такие значения:
+--4   p4  60   4800
+--1   p1  108  1200
+--5   p5  280   600
+--8   p4  40   5000
+--9   p4  80   7000
+
+--DROP FUNCTION f_delete_data(character varying,integer)
 
 
+create or replace function f_delete_data(d_name varchar, d_count int) --удаляем по имени и кол-ву
+returns void
+language 'plpgsql'
+as $$
+    BEGIN
+		if d_count < 70 then
+			delete from products
+			where count < d_count AND name = d_name;
+		end if;
+    END;
+$$;
 
+
+select f_delete_data('product_4', 69); -- удаляем product_4, которого меньше 75
+
+--select * from products
