@@ -188,20 +188,36 @@ select f_insert_data('product_4', 'producer_5', 80, 7000); --добавим за
 
 --DROP FUNCTION f_delete_data(character varying,integer)
 
-
-create or replace function f_delete_data(d_name varchar, d_count int) --удаляем по имени и кол-ву
-returns void
+create or replace function f_delete_data(d_name varchar)
+returns integer
 language 'plpgsql'
 as $$
+declare results integer;
     BEGIN
-		if d_count < 70 then
-			delete from products
-			where count < d_count AND name = d_name;
-		end if;
+        delete from products where name = d_name and count < 70;  --удаляем по имени и кол-ву
+		return results;
     END;
 $$;
+insert into products(name, producer, count, price) values ('product_1', 'producer_1', 10, 100);
+insert into products(name, producer, count, price) values ('product_2', 'producer_2', 20, 200);
+insert into products(name, producer, count, price) values ('product_3', 'producer_3', 30, 300);
+insert into products(name, producer, count, price) values ('product_4', 'producer_4', 40, 400);
+select f_insert_data('product_4', 'producer_5', 40, 5000);
+select f_insert_data('product_4', 'producer_5', 80, 7000);
+
+-- итого сейчас в таблице вот такие значения:
+--1    p1  108  1200
+--5    p5  280   600
+--9    p4  80   7000
+--10   p1  10    100
+--11   p2  20    200 -должна остаться
+--12   p3  30    300 -должна остаться
+--13   p4  40    400 -должны удалиться
+--14   p4  40   5000 -должны удалиться
+--15   p4  80   7000
 
 
-select f_delete_data('product_4', 69); -- удаляем product_4, которого меньше 75
+select f_delete_data('product_4'); -- удаляем product_4
 
---select * from products
+--функция сработала корректно
+select * from products
